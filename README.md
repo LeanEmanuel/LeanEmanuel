@@ -1,5 +1,9 @@
-## Hi there 👋
-![LeanEmanuel GitHub stats](https://github-readme-stats.vercel.app/api?username=LeanEmanuel&show_icons=true&theme=radical)
+<img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/0c7eb6ed-663b-4ce4-bfbd-18239a38ba1b" width="1000">
+<br><br>
+
+## Hi there 👋 
+![LeanEmanuel GitHub stats](https://github-readme-stats.vercel.app/api?username=LeanEmanuel&show_icons=true&theme=tokyonight)
+
 <!--
 **LeanEmanuel/LeanEmanuel** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
