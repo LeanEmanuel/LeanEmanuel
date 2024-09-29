@@ -3,10 +3,16 @@
 <br><br/>
 
 ### Hi!! 👋, I'm Leandro!!
+
+I am a programming student passionate about software development and technology. I am learning new skills and experimenting with various languages and frameworks.
+
+- 🌱 **Currently learning:** Java, Kotlin, Swift, C#, PHP, MySQL.
+- 🎯 **Goal:** To become a full-stack developer.
+- 📚 **In progress:** Improving my skills 🚀🚀🚀
 <br><br/>
 
 
-<h3 align="center">I am currently learning these technologies:</h3>
+<h3 align="center">💻 I am currently learning these technologies:</h3>
 <br><br/>
 
 <!-- Imágenes de las tecnologías -->
@@ -23,12 +29,12 @@
   <img alt="sql" src="https://user-images.githubusercontent.com/25181517/183896128-ec99105a-ec1a-4d85-b08b-1aa1620b2046.png" width="80"/>
 </div>
 <br><br/>
+
+***
 <div align="center">
   <img aling="left" alt="LeanEmanuel GitHub stats" src="https://github-readme-stats.vercel.app/api?username=LeanEmanuel&show_icons=true&theme=tokyonight"/>
   <img align="right" alt="LeanEmanuel Top Langs" src="https://github-readme-stats.vercel.app/api/top-langs/?username=LeanEmanuel&show_icons=true&theme=tokyonight"/>
-  
 </div>
-
 
 
 <!--
