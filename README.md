@@ -36,6 +36,26 @@ I am a programming student passionate about software development and technology.
   <img align="right" alt="LeanEmanuel Top Langs" src="https://github-readme-stats.vercel.app/api/top-langs/?username=LeanEmanuel&show_icons=true&theme=tokyonight"/>
 </div>
 
+***
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://github.com/LeanEmanuel">
+        <img src= "https://github.com/LeanEmanuel/Images/blob/main/Leandro.png" alt="Mini Leandro" width="80">
+      </a>
+    </td>
+</tr>
+<tr>
+  <td>
+    <a href="https://github.com/LeanEmanuel">
+      <img src="https://img.shields.io/badge/Leandro-Git?style=flat&logo=github&logoColor=white&labelColor=black&color=50e520&label=GitHub" alt="Badge">
+    </a>
+  </td>
+</tr>
+</table>
+
+
+
 
 <!--
 **LeanEmanuel/LeanEmanuel** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
