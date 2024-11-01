@@ -48,7 +48,7 @@ I am a programming student passionate about software development and technology.
 <tr>
   <td>
     <a href="https://github.com/LeanEmanuel">
-      <img src="https://img.shields.io/badge/Leandro-Git?style=flat&logo=github&logoColor=white&labelColor=black&color=50e520&label=GitHub" alt="Badge">
+      <img src="https://img.shields.io/badge/LeanEmanuel-Git?style=flat&logo=github&logoColor=white&labelColor=black&color=50e520&label=GitHub" alt="Badge">
     </a>
   </td>
 </tr>
