@@ -31,12 +31,14 @@ I am a programming student passionate about software development and technology.
 <br><br/>
 
 ***
+<!-- Stats -->
 <div align="center">
   <img aling="left" alt="LeanEmanuel GitHub stats" src="https://github-readme-stats.vercel.app/api?username=LeanEmanuel&show_icons=true&theme=tokyonight"/>
   <img align="right" alt="LeanEmanuel Top Langs" src="https://github-readme-stats.vercel.app/api/top-langs/?username=LeanEmanuel&show_icons=true&theme=tokyonight"/>
 </div>
 
 ***
+<!-- Logo Link GitHub -->
 <table align="center">
   <tr>
     <td align="center">
