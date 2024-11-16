@@ -65,8 +65,8 @@ public class LeanEmanuel {
 ***
 <!-- Stats -->
 <div align="center">
-  <img aling="left" alt="LeanEmanuel GitHub stats" src="https://github-readme-stats.vercel.app/api?username=LeanEmanuel&show_icons=true&theme=tokyonight"/>
-  <img align="right" alt="LeanEmanuel Top Langs" src="https://github-readme-stats.vercel.app/api/top-langs/?username=LeanEmanuel&show_icons=true&theme=tokyonight"/>
+  <img aling="left" alt="LeanEmanuel GitHub stats" src="https://github-readme-stats.vercel.app/api?username=LeanEmanuel&show_icons=true&theme=transparent"/>
+  <img align="right" alt="LeanEmanuel Top Langs" src="https://github-readme-stats.vercel.app/api/top-langs/?username=LeanEmanuel&show_icons=true&theme=transparent"/>
 </div>
 
 ***
