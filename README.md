@@ -2,6 +2,39 @@
   <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/0c7eb6ed-663b-4ce4-bfbd-18239a38ba1b" width="1000" alt="GIF Genial de GitHub"/>
 <br><br/>
 
+```java
+import java.time.LocalTime;
+
+public class LeanEmanuel {
+
+    private final String name = "Leandro Emanuel";
+    private String city = "Barcelona";
+    private String code[] = {"Java", "Kotlin", "PHP", "Swift", "Python", "MySQL"}; //In progress
+    private String frameworks[] = {"Laravel"};
+    private String tools[] = {"Git", "GitHub", "Docker"};
+    private String toolkits[] = {"Jetpack Compose", "SwiftUI"};
+
+    public String getStatus() {
+        LocalTime now = LocalTime.now();
+        int hour = now.getHour();
+
+        String timeBasedMessage;
+        if (hour >= 7 && hour < 15) {
+            timeBasedMessage = "Good morning! 🌅 Working!! ☕☕☕";
+        } else if (hour >= 15 && hour < 22) {
+            timeBasedMessage = "Good afternoon! ☀️ Improving my skills 🚀🚀🚀";
+        } else {
+            timeBasedMessage = "Resting and sleeping 📖🌙💤";
+        }
+        return timeBasedMessage;
+    }
+
+    public static void main(String[] args) {
+        LeanEmanuel profile = new LeanEmanuel();
+        System.out.println(profile.getStatus());
+    }
+}
+```
 ### Hi!! 👋, I'm Leandro!!
 
 I am a programming student passionate about software development and technology. I am learning new skills and experimenting with various languages and frameworks.
