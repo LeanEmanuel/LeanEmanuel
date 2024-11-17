@@ -10,8 +10,8 @@
 
 
 <p align="center">
-I am a programming student passionate about software development and technology.<br>
-I am learning new skills and experimenting with various languages and frameworks.
+I'm a programming student passionate about software development and technology.<br>
+I'm learning new skills and experimenting with various languages and frameworks.
 </p>
 
 
