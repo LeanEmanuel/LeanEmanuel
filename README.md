@@ -70,6 +70,19 @@ public class LeanEmanuel {
 </div>
 
 ***
+<!-- Spotify -->
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://spotify-github-profile.kittinanx.com/api/view?uid=1151426230&redirect=true">
+        <img src= "https://spotify-github-profile.kittinanx.com/api/view?uid=1151426230&cover_image=true&theme=novatorem&show_offline=false&background_color=000000&interchange=true&bar_color=53b14f&bar_color_cover=true" alt="spotify-github-profile">
+      </a>
+    </td>
+</tr>
+</table>
+
+
+***
 <!-- Logo Link GitHub -->
 <table align="center">
   <tr>
@@ -93,6 +106,9 @@ public class LeanEmanuel {
   <img src="https://raw.githubusercontent.com/LeanEmanuel/Images/refs/heads/main/game_horse_race.gif" alt="Logo Grupo The Java Scrolls: Code Assasins" width="800">
 </div>
 <br>
+
+
+
 
 <!--
 **LeanEmanuel/LeanEmanuel** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
