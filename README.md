@@ -88,8 +88,11 @@ public class LeanEmanuel {
 </tr>
 </table>
 
-
-
+<br>
+<div align=center>
+  <img src="https://raw.githubusercontent.com/LeanEmanuel/Images/refs/heads/main/game_horse_race.gif" alt="Logo Grupo The Java Scrolls: Code Assasins" width="800">
+</div>
+<br>
 
 <!--
 **LeanEmanuel/LeanEmanuel** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
