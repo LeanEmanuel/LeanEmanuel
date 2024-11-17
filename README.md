@@ -2,9 +2,19 @@
   <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/0c7eb6ed-663b-4ce4-bfbd-18239a38ba1b" width="1000" alt="GIF Genial de GitHub"/>
 <br><br/>
 
-### Hi!! 👋, I'm Leandro!!
+***
 
-I am a programming student passionate about software development and technology. I am learning new skills and experimenting with various languages and frameworks.
+
+
+<h2 align="center">Hi!! 👋, I'm Leandro!!</h2>
+
+
+<p align="center">
+I am a programming student passionate about software development and technology.<br>
+I am learning new skills and experimenting with various languages and frameworks.
+</p>
+
+
 <br><br/>
 ```java
 import java.time.LocalTime;
