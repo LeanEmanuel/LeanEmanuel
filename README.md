@@ -158,7 +158,7 @@ public class LeanEmanuel {
     </td>
     <!-- Celda con subtabla 4 -->
     <td>
-      <h3>Subtable 4</h3>
+      <h3></h3>
       <table border="1">
         <tr>
           <td>
@@ -240,6 +240,7 @@ public class LeanEmanuel {
 </tr>
 </table>
 
+<!-- Gif Java Assassins -->
 <br>
 <div align=center>
   <img src="https://raw.githubusercontent.com/LeanEmanuel/Images/refs/heads/main/game_horse_race.gif" alt="Logo Grupo The Java Scrolls: Code Assasins" width="800">
