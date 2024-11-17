@@ -23,9 +23,9 @@ public class LeanEmanuel {
         int hour = now.getHour();
 
         String timeBasedMessage;
-        if (hour >= 7 && hour < 15) {
+        if (hour >= 7 && hour <= 15) {
             timeBasedMessage = "Good morning! 🌅 Working!! ☕☕☕";
-        } else if (hour >= 15 && hour < 22) {
+        } else if (hour >= 15 && hour <= 22) {
             timeBasedMessage = "Good afternoon! ☀️ Improving my skills 🚀🚀🚀";
         } else {
             timeBasedMessage = "Resting and sleeping 📖🌙💤";
