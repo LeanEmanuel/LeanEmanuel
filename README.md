@@ -64,7 +64,7 @@ public class LeanEmanuel {
   <tr>
     <!-- Celda con subtabla 1 (Code) -->
     <td>
-      <h3 align="center">Code</h3>
+      <h3 align="center">Programming Languages</h3>
       <table border="1">
         <tr>
           <td>
@@ -94,7 +94,7 @@ public class LeanEmanuel {
     </td>
     <!-- Celda con subtabla 2 (Mobile Dev) -->
     <td>
-      <h3>Mobile Dev</h3>
+      <h3>Mobile Development</h3>
       <table border="1">
         <tr>
           <td>
@@ -111,12 +111,12 @@ public class LeanEmanuel {
         <tr>
           <td>
             <a href="https://docs.oracle.com/en/java/javase/22/">
-              <img alt="java" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" width="80"/>
+              <img alt="kotlin" src="https://user-images.githubusercontent.com/25181517/185062810-7ee0c3d2-17f2-4a98-9d8a-a9576947692b.png" width="80"/>
             </a>
           </td>
           <td>
             <a href="https://docs.oracle.com/en/java/javase/22/">
-              <img alt="java" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" width="80"/>
+              <img alt="swift" src="https://user-images.githubusercontent.com/25181517/121406389-6267a300-c95e-11eb-8d67-f1e22afe8aea.png" width="80"/>
             </a>
           </td>
         </tr>
@@ -127,6 +127,36 @@ public class LeanEmanuel {
   <!-- Segunda fila (Subtable 3 y Subtable 4) -->
   <tr>
     <!-- Celda con subtabla 3 -->
+    <td>
+      <h3>web Development</h3>
+      <table border="1">
+        <tr>
+          <td>
+            <a href="https://docs.oracle.com/en/java/javase/22/">
+              <img alt="html" src="https://user-images.githubusercontent.com/25181517/192158954-f88b5814-d510-4564-b285-dff7d6400dad.png" width="80"/>
+            </a>
+          </td>
+          <td>
+            <a href="https://docs.oracle.com/en/java/javase/22/">
+              <img alt="css" src="https://user-images.githubusercontent.com/25181517/183898674-75a4a1b1-f960-4ea9-abcb-637170a00a75.png" width="80"/>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="https://docs.oracle.com/en/java/javase/22/">
+              <img alt="php" src="https://user-images.githubusercontent.com/25181517/183570228-6a040b9f-3ddf-47a2-a201-743121dac664.png" width="80"/>
+            </a>
+          </td>
+          <td>
+            <a href="https://docs.oracle.com/en/java/javase/22/">
+              <img alt="java" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" width="80"/>
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <!-- Celda con subtabla 4 -->
     <td>
       <h3>Tools</h3>
       <table border="1">
@@ -156,36 +186,6 @@ public class LeanEmanuel {
         </tr>
       </table>
     </td>
-    <!-- Celda con subtabla 4 -->
-    <td>
-      <h3></h3>
-      <table border="1">
-        <tr>
-          <td>
-            <a href="https://docs.oracle.com/en/java/javase/22/">
-              <img alt="java" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" width="80"/>
-            </a>
-          </td>
-          <td>
-            <a href="https://docs.oracle.com/en/java/javase/22/">
-              <img alt="java" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" width="80"/>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a href="https://docs.oracle.com/en/java/javase/22/">
-              <img alt="java" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" width="80"/>
-            </a>
-          </td>
-          <td>
-            <a href="https://docs.oracle.com/en/java/javase/22/">
-              <img alt="java" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" width="80"/>
-            </a>
-          </td>
-        </tr>
-      </table>
-    </td>
   </tr>
 </table>
 
@@ -194,9 +194,9 @@ public class LeanEmanuel {
 
 
 <div align="center">
-  <img alt="css" src="https://user-images.githubusercontent.com/25181517/183898674-75a4a1b1-f960-4ea9-abcb-637170a00a75.png" width="80"/>
-  <img alt="html" src="https://user-images.githubusercontent.com/25181517/192158954-f88b5814-d510-4564-b285-dff7d6400dad.png" width="80"/>
-  <img alt="php" src="https://user-images.githubusercontent.com/25181517/183570228-6a040b9f-3ddf-47a2-a201-743121dac664.png" width="80"/>
+  
+  
+  
   <img alt="sql" src="https://user-images.githubusercontent.com/25181517/183896128-ec99105a-ec1a-4d85-b08b-1aa1620b2046.png" width="80"/>
 </div>
 <br><br/>
