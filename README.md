@@ -58,7 +58,7 @@ public class LeanEmanuel {
 <br><br/>
 
 <!-- Imágenes de las tecnologías -->
-<table border="1" align="center">
+<table align="center">
   <!-- Tabla principal -->
   <tr>
     <td>
@@ -96,7 +96,7 @@ public class LeanEmanuel {
           </td>
           <!-- Celda con subtabla 2 (Mobile Dev) -->
           <td>
-            <h3>Mobile Development</h3>
+            <h3 align="center">Mobile Development</h3>
             <table border="1">
               <tr>
                 <td>
@@ -129,7 +129,7 @@ public class LeanEmanuel {
         <tr>
           <!-- Celda con subtabla 3 -->
           <td>
-            <h3>Web Development</h3>
+            <h3 align="center">Web Development</h3>
             <table border="1">
               <tr>
                 <td>
@@ -158,7 +158,7 @@ public class LeanEmanuel {
           </td>
           <!-- Celda con subtabla 4 -->
           <td>
-            <h3>Tools & Database</h3>
+            <h3 align="center">Tools & Database</h3>
             <table border="1">
               <tr>
                 <td>
