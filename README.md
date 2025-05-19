@@ -77,7 +77,8 @@ public class LeanEmanuel {
                   </a>
                 </td>
                 <td>
-                  <a href="">
+                  <a href="https://www.typescriptlang.org/">
+                    <img alt="java" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/typescript.png" width="80"/>
                   </a>
                 </td>
               </tr>
@@ -106,7 +107,7 @@ public class LeanEmanuel {
                 </td>
                 <td>
                   <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="ios" src="https://user-images.githubusercontent.com/25181517/121406611-a8246b80-c95e-11eb-9b11-b771486377f6.png" width="80"/>
+                    <img alt="reactnative" src="https://cdn.worldvectorlogo.com/logos/react-native-1.svg" width="80"/>
                   </a>
                 </td>
               </tr>
@@ -117,8 +118,7 @@ public class LeanEmanuel {
                   </a>
                 </td>
                 <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="swift" src="https://user-images.githubusercontent.com/25181517/121406389-6267a300-c95e-11eb-8d67-f1e22afe8aea.png" width="80"/>
+                  <a href="">
                   </a>
                 </td>
               </tr>
