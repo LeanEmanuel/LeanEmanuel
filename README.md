@@ -26,12 +26,12 @@ public class LeanEmanuel {
 
     private final String name = "Leandro Emanuel";
     private String city = "Barcelona";
-    private final List<String> languages  = List.of("Java", "Kotlin", "TypeScript", "Dart", "Python");
-    private final List<String> frameworks = List.of("React", "React Native", "Angular", "Laravel");
-    private final List<String> toolkits   = List.of("Jetpack Compose", "TailwindCSS");
-    private final List<String> tools      = List.of("Git", "GitHub", "Docker");
-    private final List<String> databases  = List.of("MySQL", "SQLite", "PostgreSQL", "Firebase");
-    private final List<String> platforms  = List.of("Android", "Web", "Unity");
+    private List<String> languages  = List.of("Java", "Kotlin", "TypeScript", "Dart", "Python");
+    private List<String> frameworks = List.of("React", "React Native", "Angular", "Laravel");
+    private List<String> toolkits   = List.of("Jetpack Compose", "TailwindCSS");
+    private List<String> tools      = List.of("Git", "GitHub", "Docker");
+    private List<String> databases  = List.of("MySQL", "SQLite", "PostgreSQL", "Firebase");
+    private List<String> platforms  = List.of("Android", "Web", "Unity");
 
     public String getStatus() {
         LocalTime now = LocalTime.now();
@@ -197,26 +197,59 @@ public class LeanEmanuel {
   </tr>
 </table>
 
-
-<h3 align="center">💻 I am currently learning these technologies</h3>
+<!-- === Languages === -->
+<h3 align="center">🧠 Languages</h3>
 <p align="center">
-  <a href="https://www.oracle.com/java/"><img alt="Java" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"></a>
-  <a href="https://kotlinlang.org/"><img alt="Kotlin" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg"></a>
-  <a href="https://www.typescriptlang.org/"><img alt="TypeScript" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"></a>
-  <a href="https://dart.dev/"><img alt="Dart" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg"></a>
-  <a href="https://react.dev/"><img alt="React" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"></a>
-  <a href="https://reactnative.dev/"><img alt="React Native" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"></a>
-  <a href="https://developer.android.com/"><img alt="Android" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/android/android-original.svg"></a>
-  <a href="https://git-scm.com/"><img alt="Git" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"></a>
-  <a href="https://github.com/"><img alt="GitHub" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg"></a>
-  <a href="https://www.docker.com/"><img alt="Docker" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg"></a>
-  <a href="https://www.mysql.com/"><img alt="MySQL" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"></a>
+  <a href="https://www.oracle.com/java/"><img alt="Java" title="Java" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/java.png"/></a>
+  <a href="https://kotlinlang.org/"><img alt="Kotlin" title="Kotlin" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/kotlin.png"/></a>
+  <a href="https://www.typescriptlang.org/"><img alt="TypeScript" title="TypeScript" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/typescript.png"/></a>
+  <a href="https://dart.dev/"><img alt="Dart" title="Dart" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/dart.png"/></a>
+  <a href="https://www.python.org/"><img alt="Python" title="Python" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/python.png"/></a>
+  <a href=""><img alt="C#" title="C#" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/c%23.png"/></a>
+  <a href=""><img alt="PHP" title="PHP" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/php.png"/></a>
+</p>
+
+<!-- === Frameworks === -->
+<h3 align="center">⚙️ Frameworks</h3>
+<p align="center">
+  <a href="https://react.dev/"><img alt="React" title="React" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/react.png"/></a>
+  <a href="https://reactnative.dev/"><img alt="React Native" title="React Native" height="42" src="https://cdn.worldvectorlogo.com/logos/react-native-1.svg"/></a>
+  <a href="https://angular.dev/"><img alt="Angular" title="Angular" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/angular.png"/></a>
+  <a href="https://flutter.dev/"><img alt="Flutter" title="Flutter" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/flutter.png"/></a>
+  <a href="https://laravel.com/"><img alt="Laravel" title="Laravel" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/laravel.png"/></a>
+</p>
+
+<!-- === UI Toolkits / Libraries === -->
+<h3 align="center">🎨 UI Toolkits & Libraries</h3>
+<p align="center">
+  <a href="https://developer.android.com/jetpack/compose"><img alt="Jetpack Compose" title="Jetpack Compose" height="42" src="https://logo.svgcdn.com/devicon/jetpackcompose-original.png"/></a>
+  <a href="https://tailwindcss.com/"><img alt="Tailwind CSS" title="Tailwind CSS" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg"/></a>
+</p>
+
+<!-- === Tools === -->
+<h3 align="center">🛠️ Tools</h3>
+<p align="center">
+  <a href="https://git-scm.com/"><img alt="Git" title="Git" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/git.png"/></a>
+  <a href="https://github.com/"><img alt="GitHub" title="GitHub" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/github.png"/></a>
+  <a href="https://www.docker.com/"><img alt="Docker" title="Docker" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/docker.png"/></a>
+</p>
+
+<!-- === Databases === -->
+<h3 align="center">🗄️ Databases</h3>
+<p align="center">
+  <a href="https://www.mysql.com/"><img alt="MySQL" title="MySQL" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/mysql.png"/></a>
+  <a href="https://www.sqlite.org/"><img alt="SQLite" title="SQLite" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/sqlite.png"/></a>
+  <a href="https://www.postgresql.org/"><img alt="PostgreSQL" title="PostgreSQL" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/postgresql.png"/></a>
+</p>
+
+<!-- === Platforms / Engines === -->
+<h3 align="center">🕹️ Platforms & Engines</h3>
+<p align="center">
+  <a href="https://developer.android.com/"><img alt="Android" title="Android" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/android.png"/></a>
+  <a href="https://unity.com/"><img alt="Unity" title="Unity" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/unity.png"/></a>
 </p>
 
 
-<div align="center">
-  
-</div>
 <br><br/>
 
 ***
