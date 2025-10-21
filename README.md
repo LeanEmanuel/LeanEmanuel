@@ -1,5 +1,8 @@
 <!-- Imagen GIF -->
-  <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/0c7eb6ed-663b-4ce4-bfbd-18239a38ba1b" width="1000" alt="GIF Genial de GitHub"/>
+<div align="center">
+  <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/0c7eb6ed-663b-4ce4-bfbd-18239a38ba1b" width="800" alt="GIF Genial de GitHub"/>
+</div>
+  
 <br><br/>
 
 ***
@@ -23,10 +26,12 @@ public class LeanEmanuel {
 
     private final String name = "Leandro Emanuel";
     private String city = "Barcelona";
-    private String code[] = {"Java", "Kotlin", "PHP", "Swift", "Python", "MySQL"}; //In progress
-    private String frameworks[] = {"Laravel"}; //In progress
-    private String tools[] = {"Git", "GitHub", "Docker"}; //In progress
-    private String toolkits[] = {"Jetpack Compose", "SwiftUI"}; //In progress
+    private final List<String> languages  = List.of("Java", "Kotlin", "TypeScript", "Dart", "Python");
+    private final List<String> frameworks = List.of("React", "React Native", "Angular", "Laravel");
+    private final List<String> toolkits   = List.of("Jetpack Compose", "TailwindCSS");
+    private final List<String> tools      = List.of("Git", "GitHub", "Docker");
+    private final List<String> databases  = List.of("MySQL", "SQLite", "PostgreSQL", "Firebase");
+    private final List<String> platforms  = List.of("Android", "Web", "Unity");
 
     public String getStatus() {
         LocalTime now = LocalTime.now();
@@ -193,8 +198,20 @@ public class LeanEmanuel {
 </table>
 
 
-
-
+<h3 align="center">💻 I am currently learning these technologies</h3>
+<p align="center">
+  <a href="https://www.oracle.com/java/"><img alt="Java" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"></a>
+  <a href="https://kotlinlang.org/"><img alt="Kotlin" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg"></a>
+  <a href="https://www.typescriptlang.org/"><img alt="TypeScript" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"></a>
+  <a href="https://dart.dev/"><img alt="Dart" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg"></a>
+  <a href="https://react.dev/"><img alt="React" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"></a>
+  <a href="https://reactnative.dev/"><img alt="React Native" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"></a>
+  <a href="https://developer.android.com/"><img alt="Android" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/android/android-original.svg"></a>
+  <a href="https://git-scm.com/"><img alt="Git" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"></a>
+  <a href="https://github.com/"><img alt="GitHub" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg"></a>
+  <a href="https://www.docker.com/"><img alt="Docker" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg"></a>
+  <a href="https://www.mysql.com/"><img alt="MySQL" height="42" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"></a>
+</p>
 
 
 <div align="center">
