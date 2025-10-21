@@ -58,144 +58,10 @@ public class LeanEmanuel {
 
 <br><br/>
 
+***
 
 <h3 align="center">💻 I am currently learning these technologies:</h3>
-<br><br/>
 
-<!-- Imágenes de las tecnologías -->
-<table align="center">
-  <!-- Tabla principal -->
-  <tr>
-    <td>
-      <!-- Tabla interna (anidada) -->
-      <table border="1">
-        <!-- Primera fila (Code y Mobile Dev) -->
-        <tr>
-          <!-- Celda con subtabla 1 (Code) -->
-          <td>
-            <h3 align="center">Programming Languages</h3>
-            <table border="1">
-              <tr>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="java" src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" width="80"/>
-                  </a>
-                </td>
-                <td>
-                  <a href="https://www.typescriptlang.org/">
-                    <img alt="java" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/typescript.png" width="80"/>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a href="">
-                  </a>
-                </td>
-                <td>
-                  <a href="">
-                    <img alt="c#" src="https://user-images.githubusercontent.com/25181517/121405384-444d7300-c95d-11eb-959f-913020d3bf90.png" width="80"/>
-                  </a>
-                </td>
-              </tr>
-            </table>
-          </td>
-          <!-- Celda con subtabla 2 (Mobile Dev) -->
-          <td>
-            <h3 align="center">Mobile Development</h3>
-            <table border="1">
-              <tr>
-                <td>
-                  <a href="">
-                    <img alt="android" src="https://user-images.githubusercontent.com/25181517/117269608-b7dcfb80-ae58-11eb-8e66-6cc8753553f0.png" width="80"/>
-                  </a>
-                </td>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="reactnative" src="https://cdn.worldvectorlogo.com/logos/react-native-1.svg" width="80"/>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="kotlin" src="https://user-images.githubusercontent.com/25181517/185062810-7ee0c3d2-17f2-4a98-9d8a-a9576947692b.png" width="80"/>
-                  </a>
-                </td>
-                <td>
-                  <a href="">
-                  </a>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <!-- Segunda fila (Subtable 3 y Subtable 4) -->
-        <tr>
-          <!-- Celda con subtabla 3 -->
-          <td>
-            <h3 align="center">Web Development</h3>
-            <table border="1">
-              <tr>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="html" src="https://user-images.githubusercontent.com/25181517/192158954-f88b5814-d510-4564-b285-dff7d6400dad.png" width="80"/>
-                  </a>
-                </td>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="css" src="https://user-images.githubusercontent.com/25181517/183898674-75a4a1b1-f960-4ea9-abcb-637170a00a75.png" width="80"/>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="php" src="https://user-images.githubusercontent.com/25181517/183570228-6a040b9f-3ddf-47a2-a201-743121dac664.png" width="80"/>
-                  </a>
-                </td>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                  </a>
-                </td>
-              </tr>
-            </table>
-          </td>
-          <!-- Celda con subtabla 4 -->
-          <td>
-            <h3 align="center">Tools & Database</h3>
-            <table border="1">
-              <tr>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="docker" src="https://user-images.githubusercontent.com/25181517/117207330-263ba280-adf4-11eb-9b97-0ac5b40bc3be.png" width="80"/>
-                  </a>
-                </td>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="git" src="https://user-images.githubusercontent.com/25181517/192108372-f71d70ac-7ae6-4c0d-8395-51d8870c2ef0.png" width="80"/>
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="github" src="https://user-images.githubusercontent.com/25181517/192108374-8da61ba1-99ec-41d7-80b8-fb2f7c0a4948.png" width="80"/>
-                  </a>
-                </td>
-                <td>
-                  <a href="https://docs.oracle.com/en/java/javase/22/">
-                    <img alt="sql" src="https://user-images.githubusercontent.com/25181517/183896128-ec99105a-ec1a-4d85-b08b-1aa1620b2046.png" width="80"/>
-                  </a>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
 
 <!-- === Languages === -->
 <h3 align="center">🧠 Languages</h3>
@@ -248,7 +114,6 @@ public class LeanEmanuel {
   <a href="https://developer.android.com/"><img alt="Android" title="Android" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/android.png"/></a>
   <a href="https://unity.com/"><img alt="Unity" title="Unity" height="42" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/unity.png"/></a>
 </p>
-
 
 <br><br/>
 
