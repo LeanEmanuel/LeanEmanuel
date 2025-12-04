@@ -13,8 +13,8 @@
 
 
 <p align="center">
-I'm a programming student passionate about software development and technology.<br>
-I'm learning new skills and experimenting with various languages and frameworks.
+Multiplatform App Developer with a background in aeronautics. 
+Passionate about software, aviation, and AI.<br><br/> 
 </p>
 
 
@@ -23,30 +23,16 @@ I'm learning new skills and experimenting with various languages and frameworks.
 import java.time.LocalTime;
 
 public class LeanEmanuel {
-
     private final String name = "Leandro Emanuel";
-    private String city = "Barcelona";
-    private List<String> languages  = List.of("Java", "Kotlin", "TypeScript", "Dart", "Python");
-    private List<String> frameworks = List.of("React", "React Native", "Angular", "Laravel");
-    private List<String> toolkits   = List.of("Jetpack Compose", "TailwindCSS");
-    private List<String> tools      = List.of("Git", "GitHub", "Docker");
-    private List<String> databases  = List.of("MySQL", "SQLite", "PostgreSQL", "Firebase");
-    private List<String> platforms  = List.of("Android", "Web", "Unity");
+    private final String city = "Barcelona";
+    private final String[] stack = {"Java", "Kotlin", "React Native", "Angular", "Python", "Laravel"};
 
-    public String getStatus() {
-        LocalTime now = LocalTime.now();
-        int hour = now.getHour();
-
-        String timeBasedMessage;
-        if (hour >= 7 && hour <= 15) {
-            timeBasedMessage = "Good morning! 🌅 Working!! ☕☕☕";
-        } else if (hour >= 15 && hour <= 22) {
-            timeBasedMessage = "Good afternoon! ☀️ Improving my skills 🚀🚀🚀";
-        } else {
-            timeBasedMessage = "Resting and sleeping 📖🌙💤";
-        }
-        return timeBasedMessage;
-    }
+public String getStatus() {
+    int hour = java.time.LocalTime.now().getHour();
+    if (hour >= 7 && hour <= 15) return "☕ Working!";
+    if (hour >= 15 && hour <= 22) return "🚀 Improving my skills!";
+    return "🌙 Resting...";
+}
 
     public static void main(String[] args) {
         LeanEmanuel profile = new LeanEmanuel();
