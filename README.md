@@ -112,8 +112,9 @@ public String getStatus() {
   </div>
 </div>
 
+<!--
 ***
-<!-- Spotify -->
+Spotify 
 <table align="center">
   <tr>
     <td align="center">
@@ -123,8 +124,10 @@ public String getStatus() {
     </td>
 </tr>
 </table>
+-->
 
 ***
+
 <!-- Logo Link GitHub -->
 <table align="center">
   <tr>
