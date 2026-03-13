@@ -108,10 +108,9 @@ public String getStatus() {
 <div align="center">
   <div>
     <img aling="left" alt="LeanEmanuel GitHub stats" src="https://github-readme-stats-sigma-five.vercel.app/api?username=LeanEmanuel&show_icons=true&theme=tokyonight&&count_private=true"/>
-    <img align="" alt="LeanEmanuel Top Langs" src="https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=LeanEmanuel&show_icons=true&theme=tokyonight"/>
+    <img align="" alt="LeanEmanuel Top Langs" src="https://github-readme-stats.vercel.app/api/top-langs/?username=LeanEmanuel&layout=donut&show_icons=true&theme=tokyonight"/>
   </div>
 </div>
-
 
 
 <!--
