@@ -46,21 +46,27 @@ public String getStatus() {
 
 ***
 
-<h3 align="center">🧰 Tech Stack</h3>
+<h2 align="center">🧰 Tech Stack</h2>
+
+<br/>
 
 <p align="center">
   <b>Languages</b><br/>
-  <img src="https://skillicons.dev/icons?i=java,kotlin,ts,dart,python,cs,php&perline=7" alt="Java, Kotlin, TypeScript, Dart, Python, C#, PHP"/>
+  <img src="https://skillicons.dev/icons?i=java,kotlin,ts,dart,python,php&perline=6" alt="Java, Kotlin, TypeScript, Dart, Python, PHP"/>
 </p>
+
+<br/>
 
 <p align="center">
   <b>Mobile &amp; Web</b><br/>
   <img src="https://skillicons.dev/icons?i=androidstudio,flutter,react,angular,laravel,tailwind&perline=6" alt="Android, Flutter, React / React Native, Angular, Laravel, Tailwind CSS"/>
 </p>
 
+<br/>
+
 <p align="center">
-  <b>Data, Tools &amp; Engines</b><br/>
-  <img src="https://skillicons.dev/icons?i=mysql,sqlite,postgres,git,github,docker,unity&perline=7" alt="MySQL, SQLite, PostgreSQL, Git, GitHub, Docker, Unity"/>
+  <b>Data &amp; Tools</b><br/>
+  <img src="https://skillicons.dev/icons?i=mysql,sqlite,postgres,git,github,docker&perline=6" alt="MySQL, SQLite, PostgreSQL, Git, GitHub, Docker"/>
 </p>
 
 <br><br/>
