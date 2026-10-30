@@ -1,19 +1,20 @@
 # Profile statistics cards
 
-This repository ships **two separate, responsive SVG cards** for the GitHub
+This repository ships **two separate, compact SVG cards** for the GitHub
 profile:
 
 | File | Content |
 | --- | --- |
-| `assets/stats/contributions.svg` | Contributions, commits, pull requests, issues, owned repositories and the activity heat map of the last 52 weeks. |
+| `assets/stats/contributions.svg` | Contributions, commits, pull requests, issues and owned repositories, shown as coloured metric tiles. |
 | `assets/stats/languages.svg` | Distribution of the languages by code volume across the owned repositories. |
 
 Both cards follow the artboard `design/stats-variantes/01-sobria.html`: a dark
-and sober palette, rounded panels, no pixel art effect, one card per topic so
-that they stack on top of each other on a phone.
+and sober palette, rounded panels, no pixel art effect, one card per topic.
+They are embedded as **two inline images inside one centered paragraph**, so
+they stand side by side as long as the container is wide enough.
 
-**Every visible text is written in English**: the titles, the metric labels,
-the calendar legend and the dates.
+**Every visible text is written in English**: the titles, the metric labels
+and the dates.
 
 The cards are **static files committed to this repository**. Nothing is
 rendered by a third party service at read time, so the profile never depends
@@ -21,32 +22,79 @@ on an external deployment.
 
 ---
 
-## 1. Mobile first layout
+## 1. The layout: two compact cards side by side
 
-The cards are designed for a narrow viewport, not for a wide one:
+The two cards are meant to be read **side by side**, so they are compact:
 
-* the `viewBox` is **480 units wide** and the root element carries
+* the `viewBox` is **400 units wide** and the root element carries
   `width="100%"` plus `preserveAspectRatio`, so the card scales to any
   container;
-* the metrics of the contributions card are **stacked vertically** (label on
-  the left, value on the right) instead of squeezed into a horizontal row;
-* the contribution calendar is **split into blocks of 18 weeks**, each block
-  drawn with its own date range, so no cell becomes an unreadable dot;
-* the smallest font size is 16 units, which is **10.7 pixels** on a 320 pixel
+* the contributions card shows the five real metrics as **coloured mini
+  tiles** (a dot in the colour of the metric, the label and the number)
+  instead of the daily heat map: GitHub already draws that grid on the
+  profile page, so the card repeated it (spec S8);
+* the languages card is a compact list: one row per language with its share
+  and its bar;
+* **both cards have exactly the same height** (378 units), whatever the
+  number of language rows is, so they no longer look like a staircase side
+  by side (spec S9);
+* the rows of the languages card are centred in the free space below the
+  header and the last row always keeps the bottom padding, so no row is
+  ever clipped (spec S9);
+* the panel of a card is a **single rounded shape**: the background is
+  painted by the rounded rectangle itself, so the four corners outside the
+  radius stay transparent and no dark square shows behind the rounded
+  border (spec S9);
+* both cards stay below 420 units of height;
+* the smallest font size is 13 units, which is **10.4 pixels** on a 320 pixel
   wide screen;
 * long language names are truncated so they never collide with the bar.
 
-In the README both cards are embedded with `width="100%"` and
-`style="max-width:480px"`, so they fill a phone screen and stay readable on a
-wide monitor, where they are now clearly bigger than the previous 360 pixel
-version. If a renderer strips the inline style, the card still scales with
-the container (`width="100%"`) and never overflows.
+In the README both cards are **two inline images inside one centered
+paragraph** (`<p align="center">`), each one `width="320"`. There is no
+table: a table would lock the two images into two rigid columns, while
+inline images follow the ordinary flow of a paragraph and can wrap.
+
+The two images are separated by a short run of non-breaking spaces
+(`&nbsp;&nbsp;`) with a plain space on each side. The plain spaces stay
+**break opportunities**, so the second card still wraps onto the next line
+in a narrow container, while the gap keeps the two cards from touching in a
+wide one. No CSS, no class and no table are used for it: a README has no
+media queries, so nothing about the separation may depend on the width of
+the screen.
+
+### What the README can and cannot do
+
+A GitHub README has **no media queries**: GitHub strips every `<style>`
+block, so no layout can be changed with the width of the screen from CSS.
+
+With inline images the behaviour follows the ordinary rules of an inline
+format: the two cards stand **side by side** as long as the container is wide
+enough for the two of them (two cards of 320 pixels plus the gap need about
+665 pixels), and a renderer that constrains the images to the width of the
+container lets the second one **wrap** onto the next line.
+
+**This has not been verified in GitHub's own renderer**: the profile was
+never rendered by GitHub, because neither a GitHub preview nor a network
+access was available in the environment where these cards were built. A
+local browser check of an HTML copy of this paragraph confirms the ordinary
+inline behaviour (side by side in a wide container, the second image
+wrapping in a narrow one) and that the gap between the two cards is visible,
+but GitHub's own markdown and image rules were never observed. The behaviour
+above is therefore described and not promised.
+The README requests a width of 320 pixels for each card; a card that is
+opened directly (`assets/stats/contributions.svg`) fills
+the screen of the phone and is drawn at its full size.
+
+No CSS **stacking** of the cards is claimed for a phone: without media
+queries a README **cannot** guarantee it, and it has **not been verified**
+here.
 
 ### What each card shows
 
 | Card | Header | Body | Footer |
 | --- | --- | --- | --- |
-| Contributions | `Contributions` (no subtitle, no tag) | The five metrics, the `Daily activity` calendar and the `Less`/`More` legend | A single `Updated on <date>` line |
+| Contributions | `Contributions` (no subtitle, no tag) | Five metric tiles: `Contributions`, `Commits`, `Pull requests`, `Issues` and `Repositories` | A single `Updated on <date>` line |
 | Languages | `Languages` (no subtitle, no tag) | The language rows with their share | No footer |
 
 ---
@@ -153,7 +201,9 @@ be installed.
 
 ---
 
-## 4. The pending state
+## 4. The committed cards
+
+### The two states
 
 Every card carries a `data-state` attribute:
 
@@ -162,16 +212,42 @@ Every card carries a `data-state` attribute:
 | `pending` | Placeholder. The card states that it holds no data yet and shows **no number at all**. |
 | `ready` | The card was produced by a successful live run. |
 
-**The cards committed in `assets/stats` are in the `pending` state.** They do
-not contain any statistic, because no live run with a valid token has been
-performed from this repository yet. A placeholder never pretends to be data:
-it shows the title, the pending notice and an empty frame. It carries no
-footer at all: neither a number nor the path of the file it will be written
-to.
+A placeholder never pretends to be data: it shows the title, the pending
+notice and an empty frame. It carries no footer at all: neither a number nor
+the path of the file it will be written to.
 
-The first successful run of the workflow replaces them with the real cards.
-`--pending` refuses to overwrite a card whose state is `ready`, so real data
-can never be replaced by a placeholder by accident.
+The first successful run of the workflow replaces a placeholder with the real
+cards. `--pending` refuses to overwrite a card whose state is `ready`, so
+real data can never be replaced by a placeholder by accident.
+
+### How the committed cards were rebuilt offline
+
+The cards in `assets/stats` were **rebuilt offline**, without a token and
+without a single network call, out of the aggregate values that the previous
+committed cards had published:
+
+* `assets/stats/contributions.svg` published the five counters
+  (contributions, commits, pull requests, issues, repositories) and the date
+  of the last update. Those are exactly the numbers and the date the new
+  card shows.
+* `assets/stats/languages.svg` published the name, the share and the colour
+  of every row. Those are exactly the shares the new card shows.
+
+Nothing was invented and no published number was replaced by a made up one.
+The daily heat map was dropped (spec S8), so no daily data had to be
+reconstructed. The eight published language rows were rebuilt with byte sizes
+that reproduce the published shares exactly; the languages behind the
+aggregated *Other* row are not published by the card, so the snapshot
+represents them with unnamed entries that the renderer groups into the very
+same *Other* row. The only numbers the cards show are the published ones.
+
+The next live run of the workflow replaces both cards with fresh data.
+
+The later corrections of the layout (spec S9: the same height for both
+cards, the rounded panel without a dark square behind it) were applied to
+**the very same published aggregates**: the five counters, the eight shares,
+the colours and the date are unchanged. Only the geometry of the cards moved;
+no published figure was replaced and no new figure was invented.
 
 ---
 
@@ -213,8 +289,8 @@ Store the token as the repository secret `STATS_TOKEN`
   (`totalCommitContributions`, `totalPullRequestContributions`,
   `totalIssueContributions`), not only the open ones.
 * **Repositorios**: the number of repositories the account owns.
-* **Heat map**: one cell per day, coloured with five intensity levels
-  relative to the busiest day of the window.
+* **No heat map**: the daily grid is not drawn any more (spec S8), because
+  GitHub already shows that grid on the profile page.
 
 ### Languages card
 
@@ -233,8 +309,7 @@ Store the token as the repository secret `STATS_TOKEN`
 
 ## 7. Privacy
 
-* Only **aggregated numbers** reach the cards: counters, percentages and a
-  per day activity count.
+* Only **aggregated numbers** reach the cards: counters and percentages.
 * **No repository name, file name, commit message or branch ever appears** in
   a card or in the snapshot. The aggregation step drops the repository
   identity before anything is rendered.
@@ -253,8 +328,15 @@ Store the token as the repository secret `STATS_TOKEN`
 
 ## 8. Limitations
 
-* **Window**: the calendar covers the last 52 weeks (364 days). Older
+* **Window**: the counters cover the last 52 weeks (364 days). Older
   activity is not shown.
+* **Layout**: the two cards are inline images in one centered paragraph. They
+  stand side by side while the container is wide enough; a renderer that
+  constrains them to the container lets the second one wrap onto the next
+  line. The gap between the two cards is a run of non-breaking spaces with
+  a plain space on each side, so it never depends on CSS. The layout was
+  checked in a local browser with an HTML copy of the paragraph; GitHub's
+  own renderer was **not verified**.
 * **Visibility depends on the token**: a token that cannot read a private
   repository reports that repository as empty, and its private contributions
   are not counted. The cards can therefore differ from what the owner sees
@@ -271,6 +353,7 @@ Store the token as the repository secret `STATS_TOKEN`
 * **Caching**: GitHub computes the contribution calendar lazily, so the
   numbers can lag behind the profile page by minutes or hours.
 * **Pending cards**: as long as no live run succeeded, the committed cards
-  are placeholders that show no statistics on purpose.
+  are placeholders that show no statistics on purpose. The cards that are
+  committed right now hold real data (see section 4).
 * The cards are plain SVG files served from this repository. GitHub renders
   them through `<img>`, so no script inside an SVG can ever run.

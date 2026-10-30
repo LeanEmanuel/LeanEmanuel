@@ -1,4 +1,11 @@
-"""Tests for the SVG rendering of the two statistics cards."""
+"""Tests for the SVG rendering of the two statistics cards.
+
+The cards are compact (spec S8): the contributions card shows the real
+metrics as coloured mini tiles instead of the daily calendar that GitHub
+already draws itself, and the languages card is a compact list.  Both cards
+are meant to sit **side by side** in the README, so they have a similar
+height and a width that fits into half of a desktop column.
+"""
 
 from __future__ import annotations
 
@@ -9,23 +16,26 @@ import xml.etree.ElementTree as ElementTree
 from tests.helpers import (
     PRIVATE_REPO_NAME,
     PUBLIC_REPO_NAME,
-    make_full_year_snapshot,
+    make_full_language_snapshot,
     make_snapshot,
     stats_aggregate,
     stats_render,
-    weeks,
 )
 
 #: The width the cards have to stay readable at on a phone.
 MOBILE_WIDTH = 320
 #: Smallest effective font size (in screen pixels) that is still readable.
 MIN_EFFECTIVE_FONT_SIZE = 10.0
-#: The cards used to be 360 units wide; they have to be bigger now.
-OLD_CARD_WIDTH = 360
-#: Lower bound of the new, larger card width.
-MIN_CARD_WIDTH = 440
+#: The cards used to be 480 units wide; they have to be smaller now.
+OLD_CARD_WIDTH = 480
+#: Lower bound of the new, compact card width.
+MIN_CARD_WIDTH = 360
 #: Upper bound of the card width.
-MAX_CARD_WIDTH = 520
+MAX_CARD_WIDTH = 440
+#: Upper bound of the card height: the cards sit side by side.
+MAX_CARD_HEIGHT = 420
+#: Two cards side by side may differ in height by at most this many units.
+MAX_HEIGHT_DIFFERENCE = 60
 
 #: Words that must never appear in a rendered card any more: every visible
 #: text is written in English.
@@ -53,6 +63,15 @@ SPANISH_COPY = (
     "Vie",
 )
 
+#: The labels of the five real metrics of the contributions card.
+METRIC_LABELS = (
+    "Contributions",
+    "Commits",
+    "Pull requests",
+    "Issues",
+    "Repositories",
+)
+
 
 def elements(root, suffix):
     return [
@@ -61,8 +80,19 @@ def elements(root, suffix):
     ]
 
 
+def groups_with_class(root, name):
+    return [
+        element for element in root.iter()
+        if isinstance(element.tag, str) and element.get("class") == name
+    ]
+
+
 def view_box_width(root):
     return float(root.get("viewBox").split()[2])
+
+
+def view_box_height(root):
+    return float(root.get("viewBox").split()[3])
 
 
 def effective_font_sizes(root):
@@ -109,9 +139,7 @@ class CardStructureTests(unittest.TestCase):
 
     def test_the_contributions_card_shows_every_metric(self):
         content = self.cards["contributions.svg"]
-        for label in (
-            "Contributions", "Commits", "Pull requests", "Issues", "Repositories"
-        ):
+        for label in METRIC_LABELS:
             self.assertIn(label, content)
 
     def test_no_card_shows_a_public_private_pill(self):
@@ -182,17 +210,104 @@ class CardStructureTests(unittest.TestCase):
             self.assertNotIn("<pattern", content)
 
 
-class MobileLegibilityTests(unittest.TestCase):
-    def setUp(self):
-        self.cards = stats_render.render_cards(make_full_year_snapshot())
+class MetricTileTests(unittest.TestCase):
+    """The contributions card shows the metrics as coloured mini tiles."""
 
-    def test_the_cards_are_bigger_than_the_previous_360_units(self):
+    def setUp(self):
+        self.snapshot = make_snapshot()
+        self.root = ElementTree.fromstring(
+            stats_render.render_contributions_card(self.snapshot)
+        )
+        self.tiles = groups_with_class(self.root, "metric-tile")
+
+    def test_every_metric_has_its_own_tile(self):
+        labels = [tile.get("data-metric") for tile in self.tiles]
+        self.assertEqual(labels, list(METRIC_LABELS))
+
+    def test_every_tile_shows_the_label_and_the_number(self):
+        for tile in self.tiles:
+            texts = [
+                (element.text or "").strip()
+                for element in elements(tile, "text")
+            ]
+            self.assertIn(tile.get("data-metric"), texts)
+            numbers = [value for value in texts if value.isdigit()]
+            self.assertEqual(len(numbers), 1, texts)
+
+    def test_every_tile_has_its_own_colour(self):
+        colours = []
+        for tile in self.tiles:
+            circles = elements(tile, "circle")
+            self.assertEqual(len(circles), 1, tile.get("data-metric"))
+            colour = circles[0].get("fill")
+            self.assertRegex(colour, r"^#[0-9a-fA-F]{6}$")
+            colours.append(colour)
+        self.assertEqual(len(set(colours)), len(colours))
+
+    def test_the_number_of_a_tile_is_painted_in_its_colour(self):
+        for tile in self.tiles:
+            colour = elements(tile, "circle")[0].get("fill")
+            numbers = [
+                element for element in elements(tile, "text")
+                if (element.text or "").strip().isdigit()
+            ]
+            self.assertEqual(numbers[0].get("fill"), colour)
+
+    def test_the_tiles_show_the_real_values_of_the_snapshot(self):
+        contributions = self.snapshot["contributions"]
+        expected = {
+            "Contributions": contributions["total"],
+            "Commits": contributions["commits"],
+            "Pull requests": contributions["pull_requests"],
+            "Issues": contributions["issues"],
+            "Repositories": contributions["repositories"],
+        }
+        for tile in self.tiles:
+            numbers = [
+                (element.text or "").strip()
+                for element in elements(tile, "text")
+                if (element.text or "").strip().isdigit()
+            ]
+            self.assertEqual(
+                numbers[0], "{:,}".format(expected[tile.get("data-metric")])
+            )
+
+    def test_the_contributions_card_has_no_calendar(self):
+        """The daily grid duplicates the one GitHub draws itself (S8)."""
+        content = stats_render.render_contributions_card(self.snapshot)
+        self.assertNotIn("calendar-block", content)
+        self.assertNotIn("Daily activity", content)
+        self.assertNotIn("Less", content)
+        self.assertNotIn("More", content)
+        self.assertEqual(groups_with_class(self.root, "calendar-block"), [])
+
+
+class CompactCardTests(unittest.TestCase):
+    """Both cards are small enough to sit side by side (spec S8)."""
+
+    def setUp(self):
+        self.cards = stats_render.render_cards(make_full_language_snapshot())
+
+    def test_the_cards_are_smaller_than_the_previous_480_units(self):
         for name, content in self.cards.items():
             root = ElementTree.fromstring(content)
             width = view_box_width(root)
+            self.assertLess(width, OLD_CARD_WIDTH, name)
             self.assertGreaterEqual(width, MIN_CARD_WIDTH, name)
             self.assertLessEqual(width, MAX_CARD_WIDTH, name)
-            self.assertGreater(width, OLD_CARD_WIDTH, name)
+
+    def test_the_cards_are_shorter_than_the_previous_layout(self):
+        for name, content in self.cards.items():
+            root = ElementTree.fromstring(content)
+            self.assertLessEqual(view_box_height(root), MAX_CARD_HEIGHT, name)
+
+    def test_both_cards_have_a_similar_height(self):
+        """Side by side, the cards must not look like a staircase."""
+        heights = {}
+        for name, content in self.cards.items():
+            heights[name] = view_box_height(ElementTree.fromstring(content))
+        difference = abs(heights["contributions.svg"] - heights["languages.svg"])
+        self.assertLessEqual(difference, MAX_HEIGHT_DIFFERENCE, heights)
 
     def test_the_text_stays_legible_on_a_320_pixel_screen(self):
         for name, content in self.cards.items():
@@ -201,37 +316,18 @@ class MobileLegibilityTests(unittest.TestCase):
             self.assertTrue(sizes, name)
             self.assertGreaterEqual(min(sizes), MIN_EFFECTIVE_FONT_SIZE, name)
 
-    def test_the_metrics_are_stacked_vertically(self):
-        root = ElementTree.fromstring(self.cards["contributions.svg"])
-        positions = {}
-        for element in elements(root, "text"):
-            content = (element.text or "").strip()
-            if content in ("Contributions", "Commits", "Pull requests", "Issues",
-                           "Repositories"):
-                positions[content] = float(element.get("y"))
-        self.assertEqual(len(positions), 5)
-        self.assertEqual(len(set(positions.values())), 5)
-
-    def test_the_calendar_is_split_into_readable_blocks(self):
-        root = ElementTree.fromstring(self.cards["contributions.svg"])
-        blocks = [
-            element for element in root.iter()
-            if isinstance(element.tag, str)
-            and element.get("class") == "calendar-block"
-        ]
-        self.assertGreaterEqual(len(blocks), 2)
-
-    def test_a_full_year_calendar_is_split_into_several_blocks(self):
-        snapshot = make_full_year_snapshot()
+    def test_the_languages_card_is_compact(self):
+        """A compact list: one row per language, no empty space."""
+        snapshot = make_full_language_snapshot()
         root = ElementTree.fromstring(
-            stats_render.render_contributions_card(snapshot)
+            stats_render.render_languages_card(snapshot)
         )
-        blocks = [
-            element for element in root.iter()
-            if isinstance(element.tag, str)
-            and element.get("class") == "calendar-block"
+        rows = len(stats_aggregate.language_percentages(snapshot, limit=8))
+        labels = [
+            (element.text or "").strip() for element in elements(root, "text")
         ]
-        self.assertGreaterEqual(len(blocks), 3)
+        self.assertEqual(len(labels), 1 + 2 * rows)
+        self.assertLessEqual(view_box_height(root), MAX_CARD_HEIGHT)
 
 
 class EscapingTests(unittest.TestCase):
@@ -312,10 +408,11 @@ class PendingCardTests(unittest.TestCase):
             for word in SPANISH_COPY:
                 self.assertNotIn(word, content, "%s: %s" % (name, word))
 
-    def test_the_pending_cards_are_as_big_as_the_real_ones(self):
+    def test_the_pending_cards_have_the_width_of_the_real_ones(self):
         for name, content in self.cards.items():
             root = ElementTree.fromstring(content)
             self.assertGreaterEqual(view_box_width(root), MIN_CARD_WIDTH, name)
+            self.assertLessEqual(view_box_width(root), MAX_CARD_WIDTH, name)
 
     def test_the_pending_cards_do_not_show_the_asset_path(self):
         """The placeholder has no footer at all, not even the file path."""

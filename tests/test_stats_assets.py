@@ -38,9 +38,9 @@ README = os.path.join(REPO_ROOT, "README.md")
 CARD_NAMES = ("contributions.svg", "languages.svg")
 
 MOBILE_WIDTH = 320
-MAX_CARD_WIDTH = 520
-MIN_CARD_WIDTH = 440
-OLD_CARD_WIDTH = 360
+MAX_CARD_WIDTH = 440
+MIN_CARD_WIDTH = 360
+OLD_CARD_WIDTH = 480
 MAX_EFFECTIVE_FONT_SIZE = 10.0
 
 TOKEN_LIKE = re.compile(
@@ -87,14 +87,15 @@ class CommittedCardTests(unittest.TestCase):
             self.assertEqual(root.get("width"), "100%", name)
             self.assertTrue(root.get("viewBox"), name)
 
-    def test_the_committed_cards_use_a_bigger_view_box(self):
+    def test_the_committed_cards_use_a_compact_view_box(self):
+        """The cards sit side by side, so they are narrower than before."""
         for name in ("contributions.svg", "languages.svg"):
             with open(os.path.join(ASSETS_DIR, name), encoding="utf-8") as handle:
                 root = ElementTree.fromstring(handle.read())
             width = float(root.get("viewBox").split()[2])
             self.assertLessEqual(width, MAX_CARD_WIDTH, name)
             self.assertGreaterEqual(width, MIN_CARD_WIDTH, name)
-            self.assertGreater(width, OLD_CARD_WIDTH, name)
+            self.assertLess(width, OLD_CARD_WIDTH, name)
 
     def test_the_committed_cards_stay_legible_on_a_320_pixel_screen(self):
         for name in ("contributions.svg", "languages.svg"):
@@ -310,20 +311,36 @@ class ReadmeTests(unittest.TestCase):
         self.assertIn("assets/stats/contributions.svg", self.readme)
         self.assertIn("assets/stats/languages.svg", self.readme)
 
-    def test_the_readme_cards_scale_with_the_screen(self):
-        for path in ("assets/stats/contributions.svg", "assets/stats/languages.svg"):
-            tag = self._img_tag(path)
-            self.assertIn('width="100%"', tag, path)
+    def test_the_readme_shows_the_cards_in_one_centered_paragraph(self):
+        """Both cards are inline images of a single centered paragraph."""
+        paragraph = self._stats_paragraph()
+        self.assertIsNotNone(paragraph)
+        self.assertTrue(paragraph.startswith("<p align=\"center\">"), paragraph)
+        self.assertIn("assets/stats/contributions.svg", paragraph)
+        self.assertIn("assets/stats/languages.svg", paragraph)
 
-    def test_the_readme_cards_are_bigger_than_the_previous_360_px(self):
+    def test_the_readme_does_not_use_a_table_for_the_cards(self):
+        """A table would forbid the natural wrapping of the two images."""
+        paragraph = self._stats_paragraph()
+        self.assertIsNotNone(paragraph)
+        for markup in ("<table", "<tr", "<td"):
+            self.assertNotIn(markup, paragraph, markup)
+
+    def test_the_readme_cards_keep_a_fixed_width(self):
+        """A fixed width keeps the cards legible on a narrow screen."""
         for path in ("assets/stats/contributions.svg", "assets/stats/languages.svg"):
             tag = self._img_tag(path)
-            match = re.search(r"max-width:\s*(\d+)px", tag)
+            match = re.search(r'width="(\d+)"', tag)
             self.assertIsNotNone(match, tag)
             width = int(match.group(1))
-            self.assertGreater(width, OLD_CARD_WIDTH, path)
-            self.assertGreaterEqual(width, MIN_CARD_WIDTH, path)
-            self.assertLessEqual(width, MAX_CARD_WIDTH, path)
+            self.assertEqual(width, 320, path)
+
+    def test_the_readme_does_not_promise_a_mobile_stack(self):
+        """The README must not promise a behaviour that was not verified."""
+        paragraph = (self._stats_paragraph() or "").lower()
+        for promise in ("stack", "one below the other", "responsive",
+                        "guaranteed"):
+            self.assertNotIn(promise, paragraph)
 
     def test_the_readme_no_longer_uses_the_external_stats_service(self):
         self.assertNotIn("github-readme-stats", self.readme)
@@ -333,6 +350,15 @@ class ReadmeTests(unittest.TestCase):
         start = self.readme.rindex("<img", 0, index)
         end = self.readme.index(">", index)
         return self.readme[start:end]
+
+    def _stats_paragraph(self):
+        """Return the paragraph that holds both cards, or ``None``."""
+        for block in self.readme.split("<p")[1:]:
+            paragraph = "<p" + block.split("</p>")[0]
+            if ("assets/stats/contributions.svg" in paragraph
+                    and "assets/stats/languages.svg" in paragraph):
+                return paragraph
+        return None
 
 
 if __name__ == "__main__":

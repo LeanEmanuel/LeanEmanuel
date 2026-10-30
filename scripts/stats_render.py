@@ -1,21 +1,35 @@
-"""Rendering of the two responsive statistics cards.
+"""Rendering of the two profile statistics cards.
 
 The visual language follows the ``design/stats-variantes/01-sobria.html``
 artboard: a dark and sober palette, soft rounded panels, one card for the
 contributions and a second, separate card for the languages. There is no pixel
 art effect (spec S4): every shape is a plain vector element.
 
-Both cards are designed for a **narrow viewport** (a 480 unit wide view box)
-so that they stay readable on a phone: the metrics are stacked vertically and
-the contribution calendar is split into blocks of weeks that can be read
-without zooming. Every root element carries a ``viewBox`` and a relative
-width, so the very same file scales from a 320 pixel phone to a wide desktop
-column.
+Both cards are **compact** (spec S8) so that they can sit **side by side** in
+the README: the view box is 400 units wide and the cards are less than 420
+units high, which makes two of them fit into one desktop row. The
+contributions card shows the real metrics as coloured mini tiles instead of a
+daily heat map, because GitHub already draws that grid on the profile page
+itself (spec S8).
+
+Both cards have **exactly the same height** (spec S9): they are drawn on the
+shared :data:`CARD_HEIGHT`, whatever the number of language rows is, so they
+no longer look like a staircase side by side. The rows of the languages card
+are centred in the free space and never leave the panel (spec S9).
+
+The panel of a card is a **single rounded shape** (spec S9): the background is
+painted by the rounded rectangle itself, so the four corners outside the
+radius stay transparent instead of showing a dark square.
 
 Every visible text is written in **English** (spec S7). The header of a card
 carries only its title: there is no public/private pill and no subtitle. The
 contributions card ends with a single ``Updated on <date>`` line and the
 languages card has no footer at all.
+
+Responsiveness of the README layout is **not** a property of these files: a
+GitHub README has no media queries, so the two cards cannot be stacked by a
+media query.  They are embedded side by side in one centered paragraph, and
+every card scales with ``width="100%"`` so it stays sharp at any size.
 
 The cards also carry a ``data-state`` attribute:
 
@@ -38,6 +52,7 @@ except ImportError:  # pragma: no cover
 # ----------------------------------------------------------------- palette
 BG = "#090b12"
 PANEL_BORDER = "#49405c"
+TILE_BG = "#1d1e2c"
 TILE_BORDER = "#37364a"
 TEXT = "#eceef7"
 MUTED = "#bdc3d3"
@@ -45,38 +60,56 @@ DIM = "#8a91a6"
 ACCENT = "#bba2e1"
 TRACK = "#303343"
 OTHER_COLOR = "#91a0b9"
-HEAT_COLORS = ["#272b38", "#174d36", "#23724a", "#2eaa62", "#65d48d"]
 
 FONT = "system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif"
 
 # --------------------------------------------------------------- geometry
-CARD_WIDTH = 480
-PADDING = 27
+CARD_WIDTH = 400
+#: The height both cards share, so that they stand side by side (S9).
+CARD_HEIGHT = 378
+PADDING = 24
 CONTENT_WIDTH = CARD_WIDTH - 2 * PADDING
-WEEKDAY_COLUMN = 34
-GRID_LEFT = PADDING + WEEKDAY_COLUMN
-GRID_WIDTH = CARD_WIDTH - PADDING - GRID_LEFT
-BLOCK_WEEKS = 18
-CELL_GAP = 4
-MAX_CELL = 24
+
+#: The mini tiles of the contributions card.
+TILE_GAP = 12
+TILE_COLUMNS = 2
+TILE_WIDTH = (CONTENT_WIDTH - TILE_GAP) // 2
+TILE_HEIGHT = 80
+WIDE_TILE_HEIGHT = 64
+
+#: The rows of the languages card.
+LANGUAGE_ROW_STRIDE = 30
+#: The smallest stride that still leaves the rows readable.
+LANGUAGE_MIN_STRIDE = 22
+LANGUAGE_BAR_HEIGHT = 9
+#: The distance between the baseline of a row and the top of its bar.
+LANGUAGE_BAR_GAP = 7
+#: The height of the label of a row above its baseline.
+LANGUAGE_LABEL_HEIGHT = 13
+#: The free space between the header and the first row.
+LANGUAGE_TOP_GAP = 12
 
 # ------------------------------------------------------------------ type
-FONT_TITLE = 27
-FONT_LABEL = 17
-FONT_VALUE = 20
-FONT_SMALL = 16
+FONT_TITLE = 24
+FONT_TILE_LABEL = 13
+FONT_TILE_VALUE = 27
+FONT_ROW = 14
+FONT_SMALL = 13
 
 # --------------------------------------------------------------- header
-HEADER_TITLE_BASELINE = 40
-HEADER_DIVIDER = 64
+HEADER_TITLE_BASELINE = 36
+HEADER_DIVIDER = 54
 
 HEX_COLOR = re.compile(r"^#[0-9a-fA-F]{6}$")
 
-MONTH_LABELS = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-]
-WEEKDAY_LABELS = {1: "Mon", 3: "Wed", 5: "Fri"}
+#: The colour of every metric tile: one colour per metric.
+METRIC_COLORS = {
+    "Contributions": "#bba2e1",
+    "Commits": "#65d48d",
+    "Pull requests": "#f0883e",
+    "Issues": "#f778ba",
+    "Repositories": "#58a6ff",
+}
 
 
 # ------------------------------------------------------------------ helpers
@@ -138,6 +171,11 @@ def rect(x, y, width, height, fill, stroke=None, stroke_width=1, radius=None,
     return "<rect%s/>" % attributes
 
 
+def circle(cx, cy, radius, fill):
+    """A filled circle: the colour dot of a metric tile."""
+    return '<circle cx="%s" cy="%s" r="%s" fill="%s"/>' % (cx, cy, radius, fill)
+
+
 def line(x1, y1, x2, stroke, stroke_width=1):
     """Horizontal rule."""
     return '<path d="M%s %sH%s" stroke="%s" stroke-width="%s" fill="none"/>' % (
@@ -158,10 +196,13 @@ def svg_root(width, height, title, description, element_id, state="ready"):
 
 
 def panel(width, height, radius=16):
-    return (
-        rect(0, 0, width, height, BG)
-        + rect(0.5, 0.5, width - 1, height - 1, "none", PANEL_BORDER, 1, radius)
-    )
+    """The rounded panel of a card.
+
+    The background is painted by the **rounded** rectangle itself (spec S9):
+    a square background behind a rounded border would let the dark square
+    show at the four corners.
+    """
+    return rect(0.5, 0.5, width - 1, height - 1, BG, PANEL_BORDER, 1, radius)
 
 
 def header(title):
@@ -176,48 +217,42 @@ def header(title):
 
 
 # ------------------------------------------------------- contributions card
-def heat_thresholds(counts):
-    """Return the four intensity thresholds relative to the busiest day."""
-    maximum = max(counts) if counts else 0
-    return [max(1, round(maximum * factor)) for factor in (0.15, 0.35, 0.6, 0.85)]
+def metric_tile(x, y, width, height, label, value):
+    """A mini tile: a coloured dot, the label and the number of a metric."""
+    color = METRIC_COLORS.get(label, ACCENT)
+    return "".join(
+        [
+            '<g class="metric-tile" data-metric="%s">' % escape(label),
+            rect(x, y, width, height, TILE_BG, TILE_BORDER, 1, 12),
+            circle(x + 22, y + 20, 4.5, color),
+            text(x + 20, y + 44, label, FONT_TILE_LABEL, MUTED),
+            text(x + 20, y + 72, format_number(value), FONT_TILE_VALUE, color,
+                 weight="bold"),
+            "</g>",
+        ]
+    )
 
 
-def heat_level(count, thresholds):
-    if count is None or count <= 0:
-        return 0
-    level = 1
-    for index, threshold in enumerate(thresholds):
-        if count >= threshold:
-            level = index + 2
-    return min(level, 4)
-
-
-def month_label_of(date):
-    """Return the short month name of an ISO date that starts a month."""
-    if not date or not date.endswith("-01"):
-        return None
-    return MONTH_LABELS[int(date[5:7]) - 1]
-
-
-def block_range_label(block):
-    """Return the date range of a calendar block, e.g. ``Jan 2026 - Mar 2026``."""
-    if not block:
-        return ""
-    first = (block[0].get("days") or [{}])[0].get("date") or ""
-    last_days = block[-1].get("days") or []
-    last = (last_days[-1].get("date") if last_days else "") or ""
-    if not first or not last:
-        return ""
-    return "%s %s - %s %s" % (
-        MONTH_LABELS[int(first[5:7]) - 1], first[:4],
-        MONTH_LABELS[int(last[5:7]) - 1], last[:4],
+def wide_metric_tile(x, y, width, height, label, value):
+    """The wide variant of a tile: label on the left, number on the right."""
+    color = METRIC_COLORS.get(label, ACCENT)
+    middle = y + height // 2
+    return "".join(
+        [
+            '<g class="metric-tile" data-metric="%s">' % escape(label),
+            rect(x, y, width, height, TILE_BG, TILE_BORDER, 1, 12),
+            circle(x + 20, middle, 5, color),
+            text(x + 34, middle + 5, label, FONT_TILE_LABEL, MUTED),
+            text(x + width - 20, middle + 10, format_number(value),
+                 FONT_TILE_VALUE, color, "end", weight="bold"),
+            "</g>",
+        ]
     )
 
 
 def render_contributions_card(snapshot):
     """Render the contributions card (public and private activity)."""
     contributions = snapshot.get("contributions") or {}
-    weeks = contributions.get("weeks") or []
     login = snapshot.get("login") or "GitHub"
 
     metrics = [
@@ -228,100 +263,37 @@ def render_contributions_card(snapshot):
         ("Repositories", contributions.get("repositories", 0)),
     ]
 
-    columns_per_block = max(1, min(BLOCK_WEEKS, len(weeks)))
-    cell = int((GRID_WIDTH - CELL_GAP * (columns_per_block - 1)) / columns_per_block)
-    cell = max(6, min(MAX_CELL, cell))
-    step = cell + CELL_GAP
-    grid_height = 7 * step - CELL_GAP
-
-    blocks = [weeks[index:index + BLOCK_WEEKS]
-              for index in range(0, len(weeks), BLOCK_WEEKS)] or [[]]
-
     # ---- vertical rhythm
-    metrics_first = 108
-    metrics_stride = 36
-    metrics_last = metrics_first + metrics_stride * (len(metrics) - 1)
-    metrics_divider = metrics_last + 24
-    section_baseline = metrics_divider + 32
-    block_first = section_baseline + 34
-    block_stride = 34 + grid_height + 34
-    last_grid_bottom = block_first + (len(blocks) - 1) * block_stride + 34 + grid_height
-    legend_baseline = last_grid_bottom + 34
-    footer_divider = legend_baseline + 22
-    footer_first = footer_divider + 28
-    height = footer_first + 24
-
-    counts = [
-        day.get("count")
-        for week in weeks
-        for day in (week.get("days") or [])
-        if day.get("count") is not None
-    ]
-    thresholds = heat_thresholds(counts)
+    tiles_top = HEADER_DIVIDER + 16
+    row_two = tiles_top + TILE_HEIGHT + TILE_GAP
+    wide_row = row_two + TILE_HEIGHT + TILE_GAP
+    tiles_bottom = wide_row + WIDE_TILE_HEIGHT
+    footer_divider = tiles_bottom + 20
+    footer_first = footer_divider + 22
+    height = CARD_HEIGHT
 
     parts = [svg_root(
         CARD_WIDTH, height,
         "Contributions of %s" % login,
-        "Public and private contributions of the last %d weeks." % len(weeks),
+        "Public and private contributions of the owned repositories.",
         "contrib-card",
     )]
     parts.append(panel(CARD_WIDTH, height))
     parts.append(header("Contributions"))
 
-    # ---- metric rows, stacked vertically
-    for index, (label, value) in enumerate(metrics):
-        baseline = metrics_first + index * metrics_stride
-        parts.append(text(PADDING, baseline, label, FONT_LABEL, MUTED))
-        parts.append(text(
-            CARD_WIDTH - PADDING, baseline, format_number(value),
-            FONT_VALUE, TEXT, "end", weight="bold",
-        ))
-    parts.append(line(PADDING, metrics_divider, CARD_WIDTH - PADDING, "#38394a"))
+    # ---- the metrics as coloured mini tiles
+    for index, (label, value) in enumerate(metrics[:-1]):
+        column = index % TILE_COLUMNS
+        row = index // TILE_COLUMNS
+        x = PADDING + column * (TILE_WIDTH + TILE_GAP)
+        y = tiles_top + row * (TILE_HEIGHT + TILE_GAP)
+        parts.append(metric_tile(x, y, TILE_WIDTH, TILE_HEIGHT, label, value))
 
-    # ---- calendar, split into blocks of weeks
-    parts.append(text(PADDING, section_baseline, "Daily activity", FONT_LABEL, ACCENT,
-                      weight="bold"))
-    for block_index, block in enumerate(blocks):
-        base = block_first + block_index * block_stride
-        parts.append('<g class="calendar-block">')
-        parts.append(text(PADDING, base, block_range_label(block), FONT_SMALL, DIM))
-        last_label = -99
-        for column, week in enumerate(block):
-            for day in week.get("days") or []:
-                label = month_label_of(day.get("date"))
-                if label and (column - last_label) * step >= 46:
-                    parts.append(text(
-                        GRID_LEFT + column * step, base + 22, label, FONT_SMALL, MUTED
-                    ))
-                    last_label = column
-                    break
-        for column, week in enumerate(block):
-            for row, day in enumerate(week.get("days") or []):
-                count = day.get("count")
-                if count is None:
-                    continue
-                parts.append(rect(
-                    GRID_LEFT + column * step,
-                    base + 34 + row * step,
-                    cell, cell, HEAT_COLORS[heat_level(count, thresholds)],
-                    None, 1, 2,
-                ))
-        if block_index == 0:
-            for row, label in WEEKDAY_LABELS.items():
-                parts.append(text(
-                    GRID_LEFT - 8, base + 34 + row * step + cell - 3,
-                    label, FONT_SMALL, DIM, "end",
-                ))
-        parts.append("</g>")
-
-    # ---- legend
-    parts.append(text(PADDING, legend_baseline, "Less", FONT_SMALL, DIM))
-    for index, color in enumerate(HEAT_COLORS):
-        parts.append(rect(
-            PADDING + 56 + index * 22, legend_baseline - 13, 18, 14, color, None, 1, 2
-        ))
-    parts.append(text(PADDING + 56 + len(HEAT_COLORS) * 22 + 8, legend_baseline, "More",
-                      FONT_SMALL, DIM))
+    last_label, last_value = metrics[-1]
+    parts.append(wide_metric_tile(
+        PADDING, wide_row, CONTENT_WIDTH, WIDE_TILE_HEIGHT,
+        last_label, last_value,
+    ))
 
     # ---- footer: only the date of the last update
     parts.append(line(PADDING, footer_divider, CARD_WIDTH - PADDING, "#38394a"))
@@ -334,16 +306,41 @@ def render_contributions_card(snapshot):
 
 
 # ----------------------------------------------------------- languages card
+def language_layout(rows):
+    """Return the first baseline and the stride of the language rows.
+
+    The rows are centred in the free space below the header, so the card
+    looks balanced whatever the number of languages is (spec S9).  The
+    stride shrinks when there are many rows, so that the last row always
+    stays inside the panel and is never clipped.
+    """
+    top = HEADER_DIVIDER + LANGUAGE_TOP_GAP
+    bottom = CARD_HEIGHT - PADDING
+    available = bottom - top
+    block = LANGUAGE_LABEL_HEIGHT + LANGUAGE_BAR_GAP + LANGUAGE_BAR_HEIGHT
+
+    if rows > 1:
+        stride = min(
+            LANGUAGE_ROW_STRIDE, int((available - block) // (rows - 1))
+        )
+        stride = max(LANGUAGE_MIN_STRIDE, stride)
+    else:
+        stride = LANGUAGE_ROW_STRIDE
+
+    block_height = (rows - 1) * stride + block
+    offset = max(0, (available - block_height) // 2)
+    first_baseline = top + offset + LANGUAGE_LABEL_HEIGHT
+    return first_baseline, stride
+
+
 def render_languages_card(snapshot, limit=8):
     """Render the languages card (public and private repositories)."""
     percentages = language_percentages(snapshot, limit=limit)
     login = snapshot.get("login") or "GitHub"
 
-    row_stride = 44
-    first_baseline = 116
     rows = max(1, len(percentages))
-    last_bottom = first_baseline + (rows - 1) * row_stride + 24
-    height = last_bottom + 26
+    first_baseline, stride = language_layout(rows)
+    height = CARD_HEIGHT
 
     parts = [svg_root(
         CARD_WIDTH, height,
@@ -355,17 +352,19 @@ def render_languages_card(snapshot, limit=8):
     parts.append(header("Languages"))
 
     for index, (name, percentage, color) in enumerate(percentages):
-        baseline = first_baseline + index * row_stride
+        baseline = first_baseline + index * stride
         bar_color = OTHER_COLOR if name == "Other" else safe_color(color, OTHER_COLOR)
-        parts.append(text(PADDING, baseline, truncate(name), FONT_LABEL, TEXT))
+        parts.append(text(PADDING, baseline, truncate(name), FONT_ROW, TEXT))
         parts.append(text(
             CARD_WIDTH - PADDING, baseline, "%.1f%%" % percentage,
-            FONT_LABEL, MUTED, "end",
+            FONT_ROW, MUTED, "end",
         ))
-        parts.append(rect(PADDING, baseline + 12, CONTENT_WIDTH, 12, TRACK, None, 1, 6))
+        parts.append(rect(PADDING, baseline + LANGUAGE_BAR_GAP, CONTENT_WIDTH,
+                          LANGUAGE_BAR_HEIGHT, TRACK, None, 1, 5))
         filled = max(0.0, min(100.0, percentage)) / 100.0 * CONTENT_WIDTH
         if filled > 0:
-            parts.append(rect(PADDING, baseline + 12, filled, 12, bar_color, None, 1, 6))
+            parts.append(rect(PADDING, baseline + LANGUAGE_BAR_GAP, filled,
+                              LANGUAGE_BAR_HEIGHT, bar_color, None, 1, 5))
 
     parts.append("</svg>")
     return "".join(parts)
@@ -381,7 +380,7 @@ PENDING_LINES = [
 
 def render_pending_contributions_card():
     """Placeholder card: announces the missing data, shows no number."""
-    height = 360
+    height = CARD_HEIGHT
     parts = [svg_root(
         CARD_WIDTH, height,
         "Contributions",
@@ -391,7 +390,7 @@ def render_pending_contributions_card():
     parts.append(panel(CARD_WIDTH, height))
     parts.append(header("Contributions"))
     for index, line_text in enumerate(PENDING_LINES):
-        parts.append(text(PADDING, 124 + index * 26, line_text, FONT_LABEL, MUTED))
+        parts.append(text(PADDING, 118 + index * 26, line_text, FONT_ROW, MUTED))
     parts.append(rect(
         PADDING, 210, CONTENT_WIDTH, 120, "none", PANEL_BORDER, 1, 10, dash="6 6"
     ))
@@ -401,7 +400,7 @@ def render_pending_contributions_card():
 
 def render_pending_languages_card():
     """Placeholder card: announces the missing data, shows no number."""
-    height = 318
+    height = CARD_HEIGHT
     parts = [svg_root(
         CARD_WIDTH, height,
         "Languages",
@@ -411,10 +410,10 @@ def render_pending_languages_card():
     parts.append(panel(CARD_WIDTH, height))
     parts.append(header("Languages"))
     for index, line_text in enumerate(PENDING_LINES):
-        parts.append(text(PADDING, 124 + index * 26, line_text, FONT_LABEL, MUTED))
-    for index in range(3):
+        parts.append(text(PADDING, 118 + index * 26, line_text, FONT_ROW, MUTED))
+    for index in range(4):
         parts.append(rect(
-            PADDING, 212 + index * 32, CONTENT_WIDTH, 12, "none",
+            PADDING, 210 + index * 32, CONTENT_WIDTH, 12, "none",
             PANEL_BORDER, 1, 6, dash="6 6",
         ))
     parts.append("</svg>")

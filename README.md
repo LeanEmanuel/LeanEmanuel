@@ -74,11 +74,7 @@ public String getStatus() {
 ***
 <!-- Stats -->
 <p align="center">
-  <img src="assets/stats/contributions.svg" width="100%" style="max-width:480px" alt="Contributions of LeanEmanuel, public and private" />
-</p>
-
-<p align="center">
-  <img src="assets/stats/languages.svg" width="100%" style="max-width:480px" alt="Most used languages in the public and private repositories of LeanEmanuel" />
+  <img src="assets/stats/contributions.svg" width="320" alt="Contributions of LeanEmanuel, public and private" /> &nbsp;&nbsp; <img src="assets/stats/languages.svg" width="320" alt="Most used languages in the public and private repositories of LeanEmanuel" />
 </p>
 
 

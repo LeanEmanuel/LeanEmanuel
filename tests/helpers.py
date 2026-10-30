@@ -180,6 +180,110 @@ def make_full_year_snapshot():
     return snapshot
 
 
+def make_full_language_snapshot():
+    """Return a snapshot with nine languages.
+
+    The real profile reports more than eight languages, so the languages
+    card shows eight rows plus the aggregated ``Other`` row.  The fixture of
+    the default snapshot is smaller; this one has the size of the real card.
+    """
+    snapshot = make_snapshot()
+    snapshot["languages"] = list(snapshot["languages"]) + [
+        {"name": "Language%d" % index, "size": 1000 - index, "color": "#123456"}
+        for index in range(5)
+    ]
+    return snapshot
+
+
+#: The values that the committed cards publish today.  They are the
+#: aggregates of the last live run; the committed files are rebuilt from
+#: them offline, so the numbers are preserved and never invented.
+PUBLISHED_CONTRIBUTIONS = {
+    "total": 393,
+    "commits": 21,
+    "pull_requests": 0,
+    "issues": 0,
+    "repositories": 38,
+}
+
+PUBLISHED_UPDATED_ON = "2026-10-30"
+
+#: The published language rows: name, share (in percent) and colour.
+PUBLISHED_LANGUAGES = (
+    ("C#", 25.0, "#7355dd"),
+    ("HTML", 23.9, "#e34c26"),
+    ("Python", 17.5, "#3572A5"),
+    ("Java", 7.7, "#b07219"),
+    ("Kotlin", 5.7, "#A97BFF"),
+    ("C++", 3.5, "#f34b7d"),
+    ("Dart", 3.1, "#00B4AB"),
+    ("CMake", 2.8, "#DA3434"),
+)
+
+#: The share of the languages that do not fit in the eight rows.
+PUBLISHED_OTHER_SHARE = 10.9
+
+#: The total number of bytes the published shares were computed from.
+PUBLISHED_TOTAL_BYTES = 8000
+
+
+def make_published_snapshot():
+    """Return the snapshot that reproduces the committed cards exactly.
+
+    The eight published language rows are rebuilt with byte sizes that
+    reproduce the published shares exactly; the languages behind the
+    aggregated ``Other`` row are unnamed entries that the renderer groups
+    into the very same row.  No published number is replaced by a made up
+    one.
+    """
+    sizes = {
+        "C#": 1999,
+        "HTML": 1911,
+        "Python": 1399,
+        "Java": 615,
+        "Kotlin": 455,
+        "C++": 279,
+        "Dart": 247,
+        "CMake": 223,
+    }
+    languages = [
+        {"name": name, "size": size, "color": color}
+        for name, size, color in (
+            (name, sizes[name], color)
+            for name, _, color in PUBLISHED_LANGUAGES
+        )
+    ]
+    # The languages behind the "Other" row: five small entries that add up
+    # to the published share of the row.
+    for index, size in enumerate((200, 200, 180, 150, 142)):
+        languages.append(
+            {"name": "Unlisted%d" % index, "size": size, "color": None}
+        )
+    return {
+        "schema": "profile-stats-snapshot/1",
+        "login": "LeanEmanuel",
+        "generated_at": PUBLISHED_UPDATED_ON + "T00:00:00+00:00",
+        "window": {},
+        "contributions": dict(
+            PUBLISHED_CONTRIBUTIONS,
+            weeks=[
+                {
+                    "first_day": "2026-01-05",
+                    "days": [
+                        {"date": "2026-01-05", "count": 0, "weekday": 1},
+                    ],
+                }
+            ],
+        ),
+        "languages": languages,
+        "language_totals": {
+            "languages": len(languages),
+            "bytes": PUBLISHED_TOTAL_BYTES,
+            "repositories": PUBLISHED_CONTRIBUTIONS["repositories"],
+        },
+    }
+
+
 class FakeTransport:
     """GraphQL transport double.
 
