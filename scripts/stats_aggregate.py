@@ -90,10 +90,33 @@ def aggregate_languages(repositories):
     return languages
 
 
+def aggregate_stars(repositories):
+    """Sum the stargazers of every owned repository (spec S10).
+
+    ``repositories`` is the list returned by
+    :meth:`stats_api.GitHubClient.fetch_owned_repositories`.  Forks are
+    included: a fork the user created is a repository they own, so its
+    stars count like the stars of any other owned repository.
+
+    The function fails closed: a repository whose star count is missing or
+    malformed raises :class:`ValueError` instead of contributing zero,
+    because a partial sum would be a wrong number.  Repository names are
+    never copied into the result.
+    """
+    total = 0
+    for repository in repositories:
+        count = repository.get("stargazerCount")
+        if isinstance(count, bool) or not isinstance(count, int) or count < 0:
+            raise ValueError("a repository has no usable stargazerCount")
+        total += count
+    return total
+
+
 def build_snapshot(login, collection, repositories, generated_at=None, window=None):
     """Build the publishable snapshot from the raw GitHub payloads."""
     weeks = build_calendar(collection)
     languages = aggregate_languages(repositories)
+    stars = aggregate_stars(repositories)
     calendar = collection.get("contributionCalendar") or {}
     total_bytes = sum(item["size"] for item in languages)
 
@@ -117,6 +140,9 @@ def build_snapshot(login, collection, repositories, generated_at=None, window=No
             "bytes": total_bytes,
             "repositories": len(repositories),
         },
+        # The stars are a current total of the owned repositories, not a
+        # figure of the contribution window (spec S10).
+        "stars": stars,
     }
     return snapshot
 
@@ -143,6 +169,14 @@ def validate_snapshot(snapshot):
             raise ValueError("the snapshot has an invalid language entry")
         if not isinstance(language.get("size"), int):
             raise ValueError("the snapshot has an invalid language size")
+    # The star total is optional: a snapshot written before the stars were
+    # added stays loadable, and the renderer then shows the stars as
+    # unavailable instead of inventing a figure.  A star total that is
+    # there but broken is rejected.
+    if "stars" in snapshot:
+        stars = snapshot["stars"]
+        if isinstance(stars, bool) or not isinstance(stars, int) or stars < 0:
+            raise ValueError("the snapshot has an invalid stars value")
     return snapshot
 
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import unittest
 
@@ -73,6 +74,7 @@ class PrivacyTests(unittest.TestCase):
                 "contributions",
                 "languages",
                 "language_totals",
+                "stars",
             },
         )
         self.assertEqual(
@@ -120,6 +122,42 @@ class ContributionTests(unittest.TestCase):
         ]
         self.assertTrue(any(day["count"] is None for day in days))
         self.assertTrue(any(day["count"] is not None for day in days))
+
+
+class StarAggregationTests(unittest.TestCase):
+    """S10: the stars of every owned repository are summed."""
+
+    def test_the_stars_of_every_owned_repository_are_summed(self):
+        snapshot = build_snapshot()
+        self.assertEqual(snapshot["stars"], 25)
+
+    def test_the_star_total_is_a_current_total(self):
+        """Stars are a current total, not a figure of the last 364 days."""
+        snapshot = build_snapshot()
+        self.assertIsInstance(snapshot["stars"], int)
+        self.assertEqual(snapshot["stars"], 25)
+
+    def test_a_snapshot_without_stars_is_still_valid(self):
+        """Older snapshots have no star field: they stay loadable."""
+        snapshot = copy.deepcopy(make_snapshot())
+        del snapshot["stars"]
+        self.assertIs(stats_aggregate.validate_snapshot(snapshot), snapshot)
+
+    def test_a_snapshot_with_a_malformed_star_count_is_rejected(self):
+        for broken in ("many", None, 1.5, True, -1):
+            snapshot = copy.deepcopy(make_snapshot())
+            snapshot["stars"] = broken
+            with self.assertRaises(ValueError):
+                stats_aggregate.validate_snapshot(snapshot)
+
+    def test_a_repository_without_stars_cannot_be_aggregated(self):
+        with self.assertRaises(ValueError):
+            stats_aggregate.aggregate_stars([{"name": "no-stars"}])
+
+    def test_the_stars_never_name_a_repository(self):
+        snapshot = build_snapshot()
+        self.assertNotIn(PRIVATE_REPO_NAME, json.dumps(snapshot))
+        self.assertNotIn(PUBLIC_REPO_NAME, json.dumps(snapshot))
 
 
 class ValidationTests(unittest.TestCase):

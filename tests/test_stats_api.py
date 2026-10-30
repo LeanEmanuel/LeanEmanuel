@@ -16,6 +16,7 @@ from tests.helpers import (
     repository_node,
     repositories_payload,
     repository_languages_payload,
+    stats_aggregate,
     stats_api,
 )
 
@@ -110,6 +111,100 @@ class OwnedRepositoryQueryTests(unittest.TestCase):
         self.assertEqual(len(language_calls), 1)
         self.assertEqual(language_calls[0]["variables"]["after"], "lang-cursor-0")
         self.assertEqual(language_calls[0]["variables"]["name"], PRIVATE_REPO_NAME)
+
+
+class StarCountTests(unittest.TestCase):
+    """S10: the stars of every owned repository are summed (forks included)."""
+
+    def repositories_client(self, handler):
+        transport = FakeTransport(handler)
+        return stats_api.GitHubClient(FAKE_TOKEN, transport=transport), transport
+
+    def test_the_query_asks_for_the_stargazer_count(self):
+        self.assertIn("stargazerCount", stats_api.REPOSITORIES_QUERY)
+
+    def test_the_stars_of_every_page_are_summed(self):
+        """The sum is exact: every page of the connection counts."""
+        def handler(document, variables, index):
+            if "contributionsCollection" in document:
+                return contributions_payload()
+            if variables.get("after") is None:
+                return repositories_payload(
+                    [
+                        repository_node("first", [("Java", 10, "#b07219")], stars=7),
+                        repository_node("second", [("Java", 10, "#b07219")], stars=11),
+                    ],
+                    total_count=3,
+                    has_next_page=True,
+                    end_cursor="repo-cursor-1",
+                )
+            return repositories_payload(
+                [repository_node("third", [("Java", 10, "#b07219")], stars=13)],
+                total_count=3,
+            )
+
+        client, _ = self.repositories_client(handler)
+        repositories = client.fetch_owned_repositories("LeanEmanuel")
+        self.assertEqual(
+            stats_aggregate.aggregate_stars(repositories), 31
+        )
+
+    def test_an_owned_fork_contributes_its_stars(self):
+        def handler(document, variables, index):
+            if "contributionsCollection" in document:
+                return contributions_payload()
+            return repositories_payload(
+                [
+                    repository_node(
+                        "my-own-fork", [("C", 10, "#555555")], stars=9, is_fork=True
+                    )
+                ],
+                total_count=1,
+            )
+
+        client, _ = self.repositories_client(handler)
+        repositories = client.fetch_owned_repositories("LeanEmanuel")
+        self.assertEqual(stats_aggregate.aggregate_stars(repositories), 9)
+
+    def test_a_repository_without_a_stargazer_count_is_rejected(self):
+        """A missing star field fails closed: it is never read as zero."""
+        def handler(document, variables, index):
+            if "contributionsCollection" in document:
+                return contributions_payload()
+            node = repository_node("broken", [("Java", 10, "#b07219")], stars=4)
+            del node["stargazerCount"]
+            return repositories_payload([node], total_count=1)
+
+        client, _ = self.repositories_client(handler)
+        with self.assertRaises(stats_api.ApiError):
+            client.fetch_owned_repositories("LeanEmanuel")
+
+    def test_a_repository_with_a_malformed_stargazer_count_is_rejected(self):
+        def handler(document, variables, index):
+            if "contributionsCollection" in document:
+                return contributions_payload()
+            node = repository_node("broken", [("Java", 10, "#b07219")])
+            node["stargazerCount"] = "many"
+            return repositories_payload([node], total_count=1)
+
+        client, _ = self.repositories_client(handler)
+        with self.assertRaises(stats_api.ApiError):
+            client.fetch_owned_repositories("LeanEmanuel")
+
+    def test_the_star_failure_does_not_name_the_repository(self):
+        def handler(document, variables, index):
+            if "contributionsCollection" in document:
+                return contributions_payload()
+            node = repository_node(PRIVATE_REPO_NAME, [("Java", 10, "#b07219")])
+            del node["stargazerCount"]
+            return repositories_payload([node], total_count=1)
+
+        client, _ = self.repositories_client(handler)
+        with self.assertRaises(stats_api.ApiError) as caught:
+            client.fetch_owned_repositories("LeanEmanuel")
+        message = str(caught.exception)
+        self.assertNotIn(PRIVATE_REPO_NAME, message)
+        self.assertNotIn(PUBLIC_REPO_NAME, message)
 
 
 class MalformedConnectionTests(unittest.TestCase):

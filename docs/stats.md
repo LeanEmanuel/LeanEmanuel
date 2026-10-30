@@ -29,10 +29,14 @@ The two cards are meant to be read **side by side**, so they are compact:
 * the `viewBox` is **400 units wide** and the root element carries
   `width="100%"` plus `preserveAspectRatio`, so the card scales to any
   container;
-* the contributions card shows the five real metrics as **coloured mini
-  tiles** (a dot in the colour of the metric, the label and the number)
-  instead of the daily heat map: GitHub already draws that grid on the
-  profile page, so the card repeated it (spec S8);
+* the contributions card shows the six real metrics as **coloured mini
+  tiles** (a slim vertical bar in the colour of the metric, the label and
+  the number) instead of the daily heat map: GitHub already draws that
+  grid on the profile page, so the card repeated it (spec S8);
+* every metric tile is marked by a **slim coloured vertical bar** at the
+  left of the tile (spec S10). The coloured dot of the earlier tiles was
+  replaced by a thin vertical stroke in the colour of the metric; the
+  number keeps the very same colour, so a tile is read at a glance;
 * the languages card is a compact list: one row per language with its share
   and its bar;
 * **both cards have exactly the same height** (378 units), whatever the
@@ -94,8 +98,17 @@ here.
 
 | Card | Header | Body | Footer |
 | --- | --- | --- | --- |
-| Contributions | `Contributions` (no subtitle, no tag) | Five metric tiles: `Contributions`, `Commits`, `Pull requests`, `Issues` and `Repositories` | A single `Updated on <date>` line |
+| Contributions | `Contributions` (no subtitle, no tag) | Six metric tiles: `Contributions`, `Commits`, `Pull requests`, `Issues`, `Repositories` and `Stars` | A single `Updated on <date>` line |
 | Languages | `Languages` (no subtitle, no tag) | The language rows with their share | No footer |
+
+The six tiles are drawn in **three rows of two tiles of the same size**, so
+the card keeps the height it had with five tiles and both cards stay
+exactly as tall as each other (spec S9).
+
+The `Stars` tile shows the sum of the stargazers of the owned repositories.
+When that figure is not known — a snapshot written before the stars were
+added — the tile shows an em dash (`—`) and **no number at all**: a card
+never invents a figure it can not prove.
 
 ---
 
@@ -249,6 +262,15 @@ cards, the rounded panel without a dark square behind it) were applied to
 the colours and the date are unchanged. Only the geometry of the cards moved;
 no published figure was replaced and no new figure was invented.
 
+The change of spec S10 (the slim vertical bars instead of the coloured
+dots, and the new `Stars` metric) was applied in the same way: the five
+published counters and the date are unchanged, and the star figure was
+**not** reconstructed, because no published card ever showed it. The
+committed contributions card therefore shows the stars as **unavailable**
+(an em dash, `—`) until the next live run of the workflow replaces it with
+the real sum. Nothing was invented: the tile says that it does not know the
+figure instead of showing a made up number.
+
 ---
 
 ## 5. The scheduled workflow
@@ -288,9 +310,19 @@ Store the token as the repository secret `STATS_TOKEN`
 * **Commits / Pull requests / Issues**: the contributions of the same window
   (`totalCommitContributions`, `totalPullRequestContributions`,
   `totalIssueContributions`), not only the open ones.
-* **Repositorios**: the number of repositories the account owns.
+* **Repositories**: the number of repositories the account owns.
+* **Stars**: the sum of `stargazerCount` of every repository the account
+  owns, **forks included** (spec S10). The repositories connection is
+  already paginated, so the sum covers **every page** of it. The stars are
+  a **current total**, not a figure of the last 364 days: a star that was
+  given before the window opened still counts. The field is read from the
+  same `Metadata` (read-only) permission as the rest of the repository
+  data.
 * **No heat map**: the daily grid is not drawn any more (spec S8), because
   GitHub already shows that grid on the profile page.
+* **Pull requests and Issues keep the window**: their figures are the ones
+  of the last **364 days** (52 weeks), exactly as before. Only the stars
+  were added; no other metric changed its semantics.
 
 ### Languages card
 
@@ -310,6 +342,8 @@ Store the token as the repository secret `STATS_TOKEN`
 ## 7. Privacy
 
 * Only **aggregated numbers** reach the cards: counters and percentages.
+  The star total is an aggregate as well: no repository name, no star and
+  no owner ever reaches a card.
 * **No repository name, file name, commit message or branch ever appears** in
   a card or in the snapshot. The aggregation step drops the repository
   identity before anything is rendered.
@@ -322,14 +356,19 @@ Store the token as the repository secret `STATS_TOKEN`
   of the failure and the HTTP status are reported. The token is scrubbed at
   the same time.
 * The snapshot format (`profile-stats-snapshot/1`) is the only artifact that
-  can be stored or shared; it contains no repository identifiers.
+  can be stored or shared; it contains no repository identifiers. It holds
+  the star total as a plain number, next to the other aggregates. The field
+  is optional: a snapshot written before the stars were added stays
+  loadable, and the card then shows the stars as unavailable instead of
+  guessing a figure.
 
 ---
 
 ## 8. Limitations
 
 * **Window**: the counters cover the last 52 weeks (364 days). Older
-  activity is not shown.
+  activity is not shown. The stars are the exception: they are a current
+  total of the owned repositories.
 * **Layout**: the two cards are inline images in one centered paragraph. They
   stand side by side while the container is wide enough; a renderer that
   constrains them to the container lets the second one wrap onto the next
@@ -355,5 +394,8 @@ Store the token as the repository secret `STATS_TOKEN`
 * **Pending cards**: as long as no live run succeeded, the committed cards
   are placeholders that show no statistics on purpose. The cards that are
   committed right now hold real data (see section 4).
+* **The committed stars are unavailable**: the committed contributions card
+  shows `—` for the stars, because no published card ever showed a star
+  figure. The next live run of the workflow replaces it with the real sum.
 * The cards are plain SVG files served from this repository. GitHub renders
   them through `<img>`, so no script inside an SVG can ever run.

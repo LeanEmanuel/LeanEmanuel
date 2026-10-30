@@ -63,14 +63,18 @@ SPANISH_COPY = (
     "Vie",
 )
 
-#: The labels of the five real metrics of the contributions card.
+#: The labels of the real metrics of the contributions card.
 METRIC_LABELS = (
     "Contributions",
     "Commits",
     "Pull requests",
     "Issues",
     "Repositories",
+    "Stars",
 )
+
+#: The marker a metric shows when its value can not be proven.
+UNAVAILABLE = "—"
 
 
 def elements(root, suffix):
@@ -85,6 +89,11 @@ def groups_with_class(root, name):
         element for element in root.iter()
         if isinstance(element.tag, str) and element.get("class") == name
     ]
+
+
+def metric_bars(root):
+    """Return the slim coloured bars of the metric tiles."""
+    return groups_with_class(root, "metric-bar")
 
 
 def view_box_width(root):
@@ -231,22 +240,31 @@ class MetricTileTests(unittest.TestCase):
                 for element in elements(tile, "text")
             ]
             self.assertIn(tile.get("data-metric"), texts)
-            numbers = [value for value in texts if value.isdigit()]
-            self.assertEqual(len(numbers), 1, texts)
+            values = [
+                value for value in texts
+                if value.isdigit() or value == UNAVAILABLE
+            ]
+            self.assertEqual(len(values), 1, texts)
+
+    def test_tile_labels_are_larger_and_separated_from_values(self):
+        for tile in self.tiles:
+            label, value = elements(tile, "text")
+            self.assertEqual(float(label.get("font-size")), 15)
+            self.assertGreaterEqual(float(value.get("y")) - float(label.get("y")), 32)
 
     def test_every_tile_has_its_own_colour(self):
         colours = []
         for tile in self.tiles:
-            circles = elements(tile, "circle")
-            self.assertEqual(len(circles), 1, tile.get("data-metric"))
-            colour = circles[0].get("fill")
+            bars = metric_bars(tile)
+            self.assertEqual(len(bars), 1, tile.get("data-metric"))
+            colour = bars[0].get("fill")
             self.assertRegex(colour, r"^#[0-9a-fA-F]{6}$")
             colours.append(colour)
         self.assertEqual(len(set(colours)), len(colours))
 
     def test_the_number_of_a_tile_is_painted_in_its_colour(self):
         for tile in self.tiles:
-            colour = elements(tile, "circle")[0].get("fill")
+            colour = metric_bars(tile)[0].get("fill")
             numbers = [
                 element for element in elements(tile, "text")
                 if (element.text or "").strip().isdigit()
@@ -261,6 +279,7 @@ class MetricTileTests(unittest.TestCase):
             "Pull requests": contributions["pull_requests"],
             "Issues": contributions["issues"],
             "Repositories": contributions["repositories"],
+            "Stars": self.snapshot["stars"],
         }
         for tile in self.tiles:
             numbers = [
@@ -280,6 +299,129 @@ class MetricTileTests(unittest.TestCase):
         self.assertNotIn("Less", content)
         self.assertNotIn("More", content)
         self.assertEqual(groups_with_class(self.root, "calendar-block"), [])
+
+
+class MetricBarTests(unittest.TestCase):
+    """The dots of the tiles became slim vertical bars (spec S10)."""
+
+    def setUp(self):
+        self.snapshot = make_snapshot()
+        self.root = ElementTree.fromstring(
+            stats_render.render_contributions_card(self.snapshot)
+        )
+        self.bars = metric_bars(self.root)
+
+    def test_the_tiles_hold_no_dot_any_more(self):
+        self.assertEqual(elements(self.root, "circle"), [])
+
+    def test_every_tile_holds_exactly_one_bar(self):
+        self.assertEqual(len(self.bars), len(METRIC_LABELS))
+
+    def test_the_bars_are_slim_and_vertical(self):
+        for bar in self.bars:
+            width = float(bar.get("width"))
+            height = float(bar.get("height"))
+            self.assertLessEqual(width, 8.0)
+            self.assertGreater(height, width * 3)
+
+    def test_the_bars_keep_the_colour_of_their_metric(self):
+        colours = {}
+        for tile in groups_with_class(self.root, "metric-tile"):
+            colours[tile.get("data-metric")] = metric_bars(tile)[0].get("fill")
+        self.assertEqual(len(set(colours.values())), len(colours))
+
+    def test_the_bars_stay_inside_their_tile(self):
+        for tile in groups_with_class(self.root, "metric-tile"):
+            background = elements(tile, "rect")[0]
+            bar = metric_bars(tile)[0]
+            self.assertGreaterEqual(float(bar.get("x")), float(background.get("x")))
+            self.assertLessEqual(
+                float(bar.get("x")) + float(bar.get("width")),
+                float(background.get("x")) + float(background.get("width")),
+            )
+            self.assertGreaterEqual(float(bar.get("y")), float(background.get("y")))
+            self.assertLessEqual(
+                float(bar.get("y")) + float(bar.get("height")),
+                float(background.get("y")) + float(background.get("height")),
+            )
+
+
+class StarMetricTests(unittest.TestCase):
+    """S10: the stars of the owned repositories are a metric of the card."""
+
+    def setUp(self):
+        self.snapshot = make_snapshot()
+        self.root = ElementTree.fromstring(
+            stats_render.render_contributions_card(self.snapshot)
+        )
+        self.tiles = groups_with_class(self.root, "metric-tile")
+
+    def tile(self, label):
+        for tile in self.tiles:
+            if tile.get("data-metric") == label:
+                return tile
+        self.fail("the card has no %s tile" % label)
+
+    def test_the_card_shows_a_stars_tile(self):
+        self.assertIn("Stars", [tile.get("data-metric") for tile in self.tiles])
+
+    def test_the_stars_tile_shows_the_sum_of_the_snapshot(self):
+        tile = self.tile("Stars")
+        values = [
+            (element.text or "").strip()
+            for element in elements(tile, "text")
+            if (element.text or "").strip().isdigit()
+        ]
+        self.assertEqual(values, ["{:,}".format(self.snapshot["stars"])])
+
+    def test_a_snapshot_without_stars_shows_the_unavailable_marker(self):
+        """No star figure may be invented: the tile says it is unavailable."""
+        snapshot = copy.deepcopy(self.snapshot)
+        del snapshot["stars"]
+        root = ElementTree.fromstring(
+            stats_render.render_contributions_card(snapshot)
+        )
+        stars = [
+            tile for tile in groups_with_class(root, "metric-tile")
+            if tile.get("data-metric") == "Stars"
+        ][0]
+        values = [
+            (element.text or "").strip()
+            for element in elements(stars, "text")
+            if (element.text or "").strip() != "Stars"
+        ]
+        self.assertEqual(values, [UNAVAILABLE])
+
+    def test_the_unavailable_marker_is_not_a_number(self):
+        snapshot = copy.deepcopy(self.snapshot)
+        del snapshot["stars"]
+        content = stats_render.render_contributions_card(snapshot)
+        root = ElementTree.fromstring(content)
+        for tile in groups_with_class(root, "metric-tile"):
+            if tile.get("data-metric") != "Stars":
+                continue
+            for element in elements(tile, "text"):
+                value = (element.text or "").strip()
+                if value == "Stars":
+                    continue
+                self.assertFalse(any(c.isdigit() for c in value), value)
+
+    def test_the_other_metrics_keep_their_window_semantics(self):
+        """Only the stars are added: the other figures are untouched."""
+        contributions = self.snapshot["contributions"]
+        for label, key in (
+            ("Contributions", "total"),
+            ("Commits", "commits"),
+            ("Pull requests", "pull_requests"),
+            ("Issues", "issues"),
+            ("Repositories", "repositories"),
+        ):
+            values = [
+                (element.text or "").strip()
+                for element in elements(self.tile(label), "text")
+                if (element.text or "").strip().isdigit()
+            ]
+            self.assertEqual(values, ["{:,}".format(contributions[key])], label)
 
 
 class CompactCardTests(unittest.TestCase):

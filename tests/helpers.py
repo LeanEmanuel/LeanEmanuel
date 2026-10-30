@@ -99,13 +99,15 @@ def language_edges(entries):
 _UNSET = object()
 
 
-def repository_node(name, languages, has_next_languages=False, end_cursor=_UNSET):
+def repository_node(name, languages, has_next_languages=False, end_cursor=_UNSET,
+                    stars=0, is_fork=False):
     if end_cursor is _UNSET:
         end_cursor = "lang-cursor-%d" % max(len(languages) - 1, 0)
     return {
         "name": name,
-        "isFork": False,
+        "isFork": is_fork,
         "isArchived": False,
+        "stargazerCount": stars,
         "languages": {
             "totalSize": sum(size for _, size, _ in languages),
             "pageInfo": {
@@ -318,16 +320,18 @@ def default_handler(calendar_weeks=None):
         repository_node(
             PUBLIC_REPO_NAME,
             [("Java", 1000, "#b07219"), ("HTML", 400, "#e34c26")],
+            stars=12,
         ),
         repository_node(
             PRIVATE_REPO_NAME,
             [("Java", 250, "#b07219")],
             has_next_languages=True,
             end_cursor="lang-cursor-0",
+            stars=5,
         ),
     ]
     second_page = [
-        repository_node("kotlin-demo", [("Kotlin", 700, "#A97BFF")]),
+        repository_node("kotlin-demo", [("Kotlin", 700, "#A97BFF")], stars=8),
     ]
 
     def handler(document, variables, index):

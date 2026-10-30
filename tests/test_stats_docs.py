@@ -114,6 +114,35 @@ class StatsDocTests(unittest.TestCase):
         self.assertIn("offline", section.lower())
         self.assertIn("assets/stats/contributions.svg", section)
 
+    def test_the_layout_section_describes_the_vertical_bars(self):
+        """The dots of the tiles became slim vertical bars (spec S10)."""
+        section = self.section("## 1.")
+        self.assertIn("bar", section.lower())
+        self.assertNotIn("a dot in the colour of the metric", section)
+
+    def test_the_layout_section_lists_the_stars_metric(self):
+        section = self.section("## 1.")
+        self.assertIn("Stars", section)
+
+    def test_the_counted_section_describes_the_stars(self):
+        """The stars are summed over every owned repository, forks included."""
+        section = self.section("## 6.")
+        self.assertIn("Stars", section)
+        self.assertIn("stargazerCount", section)
+        self.assertIn("fork", section.lower())
+
+    def test_the_counted_section_keeps_the_window_of_prs_and_issues(self):
+        section = self.section("## 6.")
+        self.assertIn("364", section)
+        self.assertIn("Pull requests", section)
+        self.assertIn("Issues", section)
+
+    def test_the_doc_states_that_the_stars_may_be_unavailable(self):
+        """A card never invents a star figure it can not prove."""
+        section = self.section("## 4.")
+        self.assertIn("—", section)
+        self.assertIn("unavailable", section.lower())
+
 
 if __name__ == "__main__":
     unittest.main()

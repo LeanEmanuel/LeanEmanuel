@@ -190,6 +190,7 @@ query($login: String!, $after: String) {
       nodes {
         name
         isArchived
+        stargazerCount
         languages(first: 100, orderBy: {field: SIZE, direction: DESC}) {
           totalSize
           pageInfo { hasNextPage endCursor }
@@ -430,6 +431,7 @@ class GitHubClient:
         name = node.get("name")
         if not isinstance(name, str) or not name:
             raise ApiError("a repository of the connection has no name")
+        self._require_stargazer_count(node)
         languages = node.get("languages")
         if not isinstance(languages, dict):
             raise ApiError("the languages connection of a repository is missing")
@@ -438,6 +440,27 @@ class GitHubClient:
             raise ApiError(
                 "the languages connection of a repository has a malformed edge list"
             )
+
+    @staticmethod
+    def _require_stargazer_count(node):
+        """Reject a repository whose star count can not be read.
+
+        The stars of every owned repository are summed (spec S10), so a
+        missing or malformed ``stargazerCount`` would silently drop the
+        stars of that repository.  The client fails closed instead: the
+        field has to be a plain, non negative integer.  The message never
+        names the repository.
+        """
+        count = node.get("stargazerCount")
+        if isinstance(count, bool) or not isinstance(count, int):
+            raise ApiError(
+                "a repository of the connection has no usable stargazerCount"
+            )
+        if count < 0:
+            raise ApiError(
+                "a repository of the connection has a negative stargazerCount"
+            )
+        return count
 
     def _fetch_all_languages(self, login, repository):
         name = repository.get("name")

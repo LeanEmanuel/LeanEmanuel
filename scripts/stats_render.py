@@ -10,7 +10,16 @@ the README: the view box is 400 units wide and the cards are less than 420
 units high, which makes two of them fit into one desktop row. The
 contributions card shows the real metrics as coloured mini tiles instead of a
 daily heat map, because GitHub already draws that grid on the profile page
-itself (spec S8).
+itself (spec S8).  Every tile is marked by a **slim coloured vertical bar**
+(spec S10): the coloured dot of the earlier tiles was replaced by a thin
+vertical stroke in the colour of the metric, at the left of the tile.
+
+The card holds **six metrics**: contributions, commits, pull requests,
+issues, the owned repositories and the **stars** of the owned repositories
+(spec S10).  The stars are the sum of the stargazers of every owned
+repository, forks included.  A snapshot that does not hold a star figure
+(for example one written before the stars were added) shows the stars as
+**unavailable** (``—``) instead of a made up number.
 
 Both cards have **exactly the same height** (spec S9): they are drawn on the
 shared :data:`CARD_HEIGHT`, whatever the number of language rows is, so they
@@ -74,8 +83,14 @@ CONTENT_WIDTH = CARD_WIDTH - 2 * PADDING
 TILE_GAP = 12
 TILE_COLUMNS = 2
 TILE_WIDTH = (CONTENT_WIDTH - TILE_GAP) // 2
-TILE_HEIGHT = 80
-WIDE_TILE_HEIGHT = 64
+TILE_HEIGHT = 68
+
+#: The slim coloured vertical bar that marks a metric (spec S10).  It
+#: replaced the coloured dot of the earlier tiles.
+METRIC_BAR_WIDTH = 4
+METRIC_BAR_INSET = 10
+#: The distance between the bar and the text of the tile.
+METRIC_BAR_GAP = 10
 
 #: The rows of the languages card.
 LANGUAGE_ROW_STRIDE = 30
@@ -91,7 +106,7 @@ LANGUAGE_TOP_GAP = 12
 
 # ------------------------------------------------------------------ type
 FONT_TITLE = 24
-FONT_TILE_LABEL = 13
+FONT_TILE_LABEL = 15
 FONT_TILE_VALUE = 27
 FONT_ROW = 14
 FONT_SMALL = 13
@@ -109,7 +124,12 @@ METRIC_COLORS = {
     "Pull requests": "#f0883e",
     "Issues": "#f778ba",
     "Repositories": "#58a6ff",
+    "Stars": "#f2cc60",
 }
+
+#: The marker of a metric whose value can not be proven.  It is never a
+#: number: a card may not invent a figure it does not hold.
+UNAVAILABLE = "—"
 
 
 # ------------------------------------------------------------------ helpers
@@ -171,9 +191,17 @@ def rect(x, y, width, height, fill, stroke=None, stroke_width=1, radius=None,
     return "<rect%s/>" % attributes
 
 
-def circle(cx, cy, radius, fill):
-    """A filled circle: the colour dot of a metric tile."""
-    return '<circle cx="%s" cy="%s" r="%s" fill="%s"/>' % (cx, cy, radius, fill)
+def metric_bar(x, y, height, color):
+    """The slim coloured vertical bar of a metric tile (spec S10).
+
+    The bar replaces the coloured dot of the earlier tiles: a thin
+    vertical stroke in the colour of the metric, at the left of the tile.
+    """
+    return (
+        '<rect class="metric-bar" x="%s" y="%s" width="%s" height="%s" '
+        'fill="%s" rx="%s"/>'
+        % (x, y, METRIC_BAR_WIDTH, height, color, METRIC_BAR_WIDTH // 2)
+    )
 
 
 def line(x1, y1, x2, stroke, stroke_width=1):
@@ -218,33 +246,29 @@ def header(title):
 
 # ------------------------------------------------------- contributions card
 def metric_tile(x, y, width, height, label, value):
-    """A mini tile: a coloured dot, the label and the number of a metric."""
+    """A mini tile: a slim vertical bar, the label and the number.
+
+    ``value`` is ``None`` when the figure is unknown (a snapshot written
+    before the stars were added): the tile then shows the unavailable
+    marker instead of a number, so that no figure is ever invented.
+    """
     color = METRIC_COLORS.get(label, ACCENT)
+    unavailable = value is None
+    number = UNAVAILABLE if unavailable else format_number(value)
+    number_fill = DIM if unavailable else color
+    bar_x = x + METRIC_BAR_INSET
+    text_x = bar_x + METRIC_BAR_WIDTH + METRIC_BAR_GAP
     return "".join(
         [
             '<g class="metric-tile" data-metric="%s">' % escape(label),
             rect(x, y, width, height, TILE_BG, TILE_BORDER, 1, 12),
-            circle(x + 22, y + 20, 4.5, color),
-            text(x + 20, y + 44, label, FONT_TILE_LABEL, MUTED),
-            text(x + 20, y + 72, format_number(value), FONT_TILE_VALUE, color,
+            metric_bar(
+                bar_x, y + METRIC_BAR_INSET,
+                height - 2 * METRIC_BAR_INSET, color,
+            ),
+            text(text_x, y + 24, label, FONT_TILE_LABEL, MUTED),
+            text(text_x, y + 56, number, FONT_TILE_VALUE, number_fill,
                  weight="bold"),
-            "</g>",
-        ]
-    )
-
-
-def wide_metric_tile(x, y, width, height, label, value):
-    """The wide variant of a tile: label on the left, number on the right."""
-    color = METRIC_COLORS.get(label, ACCENT)
-    middle = y + height // 2
-    return "".join(
-        [
-            '<g class="metric-tile" data-metric="%s">' % escape(label),
-            rect(x, y, width, height, TILE_BG, TILE_BORDER, 1, 12),
-            circle(x + 20, middle, 5, color),
-            text(x + 34, middle + 5, label, FONT_TILE_LABEL, MUTED),
-            text(x + width - 20, middle + 10, format_number(value),
-                 FONT_TILE_VALUE, color, "end", weight="bold"),
             "</g>",
         ]
     )
@@ -261,13 +285,16 @@ def render_contributions_card(snapshot):
         ("Pull requests", contributions.get("pull_requests", 0)),
         ("Issues", contributions.get("issues", 0)),
         ("Repositories", contributions.get("repositories", 0)),
+        # The stars are the sum of the stargazers of every owned repository
+        # (spec S10).  They are ``None`` when the snapshot does not hold
+        # them: the tile then shows that the figure is unavailable.
+        ("Stars", snapshot.get("stars")),
     ]
 
     # ---- vertical rhythm
     tiles_top = HEADER_DIVIDER + 16
-    row_two = tiles_top + TILE_HEIGHT + TILE_GAP
-    wide_row = row_two + TILE_HEIGHT + TILE_GAP
-    tiles_bottom = wide_row + WIDE_TILE_HEIGHT
+    rows = (len(metrics) + TILE_COLUMNS - 1) // TILE_COLUMNS
+    tiles_bottom = tiles_top + rows * (TILE_HEIGHT + TILE_GAP) - TILE_GAP
     footer_divider = tiles_bottom + 20
     footer_first = footer_divider + 22
     height = CARD_HEIGHT
@@ -275,25 +302,20 @@ def render_contributions_card(snapshot):
     parts = [svg_root(
         CARD_WIDTH, height,
         "Contributions of %s" % login,
-        "Public and private contributions of the owned repositories.",
+        "Public and private contributions and the stars of the owned "
+        "repositories.",
         "contrib-card",
     )]
     parts.append(panel(CARD_WIDTH, height))
     parts.append(header("Contributions"))
 
     # ---- the metrics as coloured mini tiles
-    for index, (label, value) in enumerate(metrics[:-1]):
+    for index, (label, value) in enumerate(metrics):
         column = index % TILE_COLUMNS
         row = index // TILE_COLUMNS
         x = PADDING + column * (TILE_WIDTH + TILE_GAP)
         y = tiles_top + row * (TILE_HEIGHT + TILE_GAP)
         parts.append(metric_tile(x, y, TILE_WIDTH, TILE_HEIGHT, label, value))
-
-    last_label, last_value = metrics[-1]
-    parts.append(wide_metric_tile(
-        PADDING, wide_row, CONTENT_WIDTH, WIDE_TILE_HEIGHT,
-        last_label, last_value,
-    ))
 
     # ---- footer: only the date of the last update
     parts.append(line(PADDING, footer_divider, CARD_WIDTH - PADDING, "#38394a"))
