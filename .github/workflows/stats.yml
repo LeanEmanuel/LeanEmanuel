@@ -1,0 +1,65 @@
+name: Update profile statistics
+
+# Refreshes the two statistics cards in assets/stats and commits them.
+# The workflow only needs the "contents: write" permission, which is the
+# minimum required to push the generated SVG files back to the repository.
+#
+# The actions are pinned to immutable commit SHAs (verified against the
+# upstream tags); the human readable version stays in the comment.
+
+on:
+  schedule:
+    # Every day at 04:23 UTC.
+    - cron: "23 4 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/**"
+      - ".github/workflows/stats.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-statistics
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    name: Generate the statistics cards
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+
+      - name: Run the test suite
+        run: python -m unittest discover -s tests -t .
+
+      - name: Generate the cards
+        env:
+          # Read-only token, only available to this step. It is never printed
+          # and never written to the repository.
+          STATS_TOKEN: ${{ secrets.STATS_TOKEN }}
+          STATS_LOGIN: ${{ github.repository_owner }}
+        run: python scripts/generate_stats.py
+
+      - name: Commit the cards when they changed
+        run: |
+          if [ -z "$(git status --porcelain -- assets/stats)" ]; then
+            echo "the statistics cards are already up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/stats
+          git commit -m "chore(stats): refresh the profile statistics cards"
+          git push

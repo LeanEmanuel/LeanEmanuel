@@ -73,12 +73,13 @@ public String getStatus() {
 
 ***
 <!-- Stats -->
-<div align="center">
-  <div>
-    <img aling="left" alt="LeanEmanuel GitHub stats" src="https://github-readme-stats-sigma-five.vercel.app/api?username=LeanEmanuel&show_icons=true&theme=tokyonight&&count_private=true"/>
-    <img align="" alt="LeanEmanuel Top Langs" src="https://github-readme-stats.vercel.app/api/top-langs/?username=LeanEmanuel&layout=donut&show_icons=true&theme=tokyonight"/>
-  </div>
-</div>
+<p align="center">
+  <img src="assets/stats/contributions.svg" width="100%" style="max-width:480px" alt="Contributions of LeanEmanuel, public and private" />
+</p>
+
+<p align="center">
+  <img src="assets/stats/languages.svg" width="100%" style="max-width:480px" alt="Most used languages in the public and private repositories of LeanEmanuel" />
+</p>
 
 
 <!--
