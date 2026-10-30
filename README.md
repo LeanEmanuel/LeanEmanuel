@@ -1,8 +1,8 @@
-<!-- Imagen GIF -->
+<!-- Banner -->
 <div align="center">
-  <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/0c7eb6ed-663b-4ce4-bfbd-18239a38ba1b" width="800" alt="GIF Genial de GitHub"/>
+  <img src="assets/banner.svg" width="900" alt="Lean Emanuel - Full Stack Developer. Press start."/>
 </div>
-  
+
 <br><br/>
 
 ***
