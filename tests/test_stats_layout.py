@@ -155,6 +155,7 @@ def snapshot_of_contributions_card(content):
             "issues": values["Issues"],
             "repositories": values["Repositories"],
         },
+        "stars": values["Stars"],
     }
 
 
@@ -377,7 +378,7 @@ class CommittedCardTests(unittest.TestCase):
     """
 
     def test_the_committed_contributions_card_is_the_output_of_the_generator(self):
-        """The five counters and the date of the file are the rendered ones."""
+        """The six counters and the date of the file are the rendered ones."""
         content = committed_card("contributions.svg")
         snapshot = snapshot_of_contributions_card(content)
         self.assertEqual(
@@ -426,13 +427,13 @@ class CommittedCardTests(unittest.TestCase):
             self.assertIn("<style>text{font-family:", committed_card(name))
 
     def test_the_committed_contributions_card_shows_no_other_number(self):
-        """Five counters and the date, nothing else."""
+        """Six counters and the date, nothing else."""
         values = texts(parse(committed_card("contributions.svg")))
         numbers = [
             value for value in values
             if any(character.isdigit() for character in value)
         ]
-        self.assertEqual(len(numbers), 6, numbers)
+        self.assertEqual(len(numbers), 7, numbers)
 
 
 class PublishedValuesTests(unittest.TestCase):
