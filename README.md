@@ -3,20 +3,15 @@
   <img src="assets/banner.svg" width="900" alt="Lean Emanuel - Full Stack Developer. Press start."/>
 </div>
 
-<br><br/>
-
 ***
 
 <h2 align="center">Hi!! 👋, I'm Leandro!!</h2>
 
-
 <p align="center">
-Multiplatform App Developer with a background in aeronautics. 
-Passionate about software, aviation, and AI.<br><br/> 
+Multiplatform App Developer with a background in aeronautics.<br/>
+Passionate about software, aviation, and AI.
 </p>
 
-
-<br><br/>
 ```java
 import java.time.LocalTime;
 
@@ -25,12 +20,12 @@ public class LeanEmanuel {
     private final String city = "Barcelona";
     private final String[] stack = {"Java", "Kotlin", "React Native", "Angular", "Python", "Laravel"};
 
-public String getStatus() {
-    int hour = java.time.LocalTime.now().getHour();
-    if (hour >= 7 && hour <= 15) return "☕ Working!";
-    if (hour >= 15 && hour <= 22) return "🚀 Improving my skills!";
-    return "🌙 Resting...";
-}
+    public String getStatus() {
+        int hour = LocalTime.now().getHour();
+        if (hour >= 7 && hour < 15) return "☕ Working!";
+        if (hour >= 15 && hour < 22) return "🚀 Improving my skills!";
+        return "🌙 Resting...";
+    }
 
     public static void main(String[] args) {
         LeanEmanuel profile = new LeanEmanuel();
@@ -39,37 +34,27 @@ public String getStatus() {
 }
 ```
 
-
-<br><br/>
-
 ***
 
 <h2 align="center">🧰 Tech Stack</h2>
-
-<br/>
 
 <p align="center">
   <b>Languages</b><br/>
   <img src="https://skillicons.dev/icons?i=java,kotlin,ts,dart,python,php&perline=6" alt="Java, Kotlin, TypeScript, Dart, Python, PHP"/>
 </p>
 
-<br/>
-
 <p align="center">
   <b>Mobile &amp; Web</b><br/>
   <img src="https://skillicons.dev/icons?i=androidstudio,flutter,react,angular,laravel,tailwind&perline=6" alt="Android, Flutter, React / React Native, Angular, Laravel, Tailwind CSS"/>
 </p>
-
-<br/>
 
 <p align="center">
   <b>Data &amp; Tools</b><br/>
   <img src="https://skillicons.dev/icons?i=mysql,sqlite,postgres,git,github,docker&perline=6" alt="MySQL, SQLite, PostgreSQL, Git, GitHub, Docker"/>
 </p>
 
-<br><br/>
-
 ***
+
 <!-- Stats -->
 <p align="center">
   <img src="assets/stats/contributions.svg" width="320" alt="Contributions of LeanEmanuel, public and private" /> &nbsp;&nbsp; <img src="assets/stats/languages.svg" width="320" alt="Most used languages in the public and private repositories of LeanEmanuel" />
