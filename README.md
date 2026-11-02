@@ -77,23 +77,23 @@ Spotify
 
 ***
 
-<!-- Signature -->
-<p align="center">
-  <a href="https://github.com/LeanEmanuel">
-    <img src="https://raw.githubusercontent.com/LeanEmanuel/Images/main/Leandro.png" alt="Leandro's avatar: a hooded pixel-art rogue" width="120">
-  </a>
-</p>
-
-<h3 align="center">Leandro Emanuel</h3>
-
-<p align="center">
-  <sub>Multiplatform developer · Barcelona</sub>
-</p>
-
-<p align="center">
-  <a href="https://github.com/LeanEmanuel"><img src="https://img.shields.io/badge/GitHub-LeanEmanuel-50e520?style=for-the-badge&logo=github&logoColor=white&labelColor=black" alt="GitHub: LeanEmanuel"/></a>
-  <a href="https://www.linkedin.com/in/leandro-struni/"><img src="https://img.shields.io/badge/LinkedIn-Leandro_Struni-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=black" alt="LinkedIn: Leandro Struni"/></a>
-</p>
+<!-- Logo Link GitHub -->
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://github.com/LeanEmanuel">
+        <img src="https://raw.githubusercontent.com/LeanEmanuel/Images/main/Leandro.png" alt="Mini Leandro" width="80">
+      </a>
+    </td>
+</tr>
+<tr>
+  <td>
+    <a href="https://github.com/LeanEmanuel">
+      <img src="https://img.shields.io/badge/LeanEmanuel-Git?style=flat&logo=github&logoColor=white&labelColor=black&color=50e520&label=GitHub" alt="Badge">
+    </a>
+  </td>
+</tr>
+</table>
 
 <!-- Gif Java Assassins -->
 <br>
