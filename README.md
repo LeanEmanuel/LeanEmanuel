@@ -5,11 +5,11 @@
 
 ***
 
-<h2 align="center">Hi!! 👋, I'm Leandro!!</h2>
+<h2 align="center">Hi, I'm Leandro 👋</h2>
 
 <p align="center">
-Multiplatform App Developer with a background in aeronautics.<br/>
-Passionate about software, aviation, and AI.
+Multiplatform developer with a background in aeronautics.<br/>
+Passionate about building software, aviation, and AI.
 </p>
 
 ```java
