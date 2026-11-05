@@ -57,7 +57,7 @@ public class LeanEmanuel {
 
 <!-- Stats -->
 <p align="center">
-  <img src="assets/stats/contributions.svg" width="320" alt="Contributions of LeanEmanuel, public and private" /> &nbsp;&nbsp; <img src="assets/stats/languages.svg" width="320" alt="Most used languages in the public and private repositories of LeanEmanuel" />
+  <img src="assets/stats/contributions.svg" width="320" alt="Contributions of LeanEmanuel, public and private" /> <img src="assets/stats/languages.svg" width="320" alt="Most used languages in the public and private repositories of LeanEmanuel" />
 </p>
 
 

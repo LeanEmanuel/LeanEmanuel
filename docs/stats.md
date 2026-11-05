@@ -59,13 +59,10 @@ paragraph** (`<p align="center">`), each one `width="320"`. There is no
 table: a table would lock the two images into two rigid columns, while
 inline images follow the ordinary flow of a paragraph and can wrap.
 
-The two images are separated by a short run of non-breaking spaces
-(`&nbsp;&nbsp;`) with a plain space on each side. The plain spaces stay
-**break opportunities**, so the second card still wraps onto the next line
-in a narrow container, while the gap keeps the two cards from touching in a
-wide one. No CSS, no class and no table are used for it: a README has no
-media queries, so nothing about the separation may depend on the width of
-the screen.
+The two images are separated by an ordinary space. It provides a small gap
+on wide screens and **break opportunities** without leaving non-breaking
+spaces before the second card when it wraps. No CSS, no class and no table
+are used: a README has no media queries.
 
 ### What the README can and cannot do
 
@@ -74,8 +71,7 @@ block, so no layout can be changed with the width of the screen from CSS.
 
 With inline images the behaviour follows the ordinary rules of an inline
 format: the two cards stand **side by side** as long as the container is wide
-enough for the two of them (two cards of 320 pixels plus the gap need about
-665 pixels), and a renderer that constrains the images to the width of the
+enough for the two of them (two cards of 320 pixels plus a small gap), and a renderer that constrains the images to the width of the
 container lets the second one **wrap** onto the next line.
 
 **This has not been verified in GitHub's own renderer**: the profile was

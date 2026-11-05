@@ -492,7 +492,8 @@ class ReadmeSeparationTests(unittest.TestCase):
 
     def test_the_two_cards_are_separated(self):
         separator = self._separator()
-        self.assertIn("&nbsp;", separator)
+        self.assertNotIn("&nbsp;", separator)
+        self.assertRegex(separator, r'^\s+<img\s+src="$')
 
     def test_the_separation_keeps_the_natural_wrapping(self):
         """A plain space stays a break opportunity between the cards."""

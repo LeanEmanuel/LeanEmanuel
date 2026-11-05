@@ -85,7 +85,7 @@ class StatsDocTests(unittest.TestCase):
 
     def test_the_layout_section_describes_the_separation_of_the_cards(self):
         section = self.section("## 1.")
-        self.assertIn("&nbsp;", section)
+        self.assertIn("ordinary space", section)
         self.assertIn("break opportunities", section)
 
     def test_the_layout_section_states_that_the_separation_needs_no_css(self):
